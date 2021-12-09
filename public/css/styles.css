@@ -19,3 +19,9 @@ body {
   text-align: center;
   padding-bottom: 3%;
 }
+
+
+.err-msg {
+  color:red;
+  padding:4%;
+}

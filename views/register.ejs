@@ -8,7 +8,7 @@
           <h3 class="login-page-heading">Create account</h3>
 
           <!-- Makes POST request to /login route -->
-        	<form id="signup-form" method="post">
+        	<form actionid="signup-form" action="/register/retailer" method="post">
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fas fa-users-cog"></i> </span>
@@ -23,7 +23,7 @@
               <div class="input-group-prepend">
                   <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                </div>
-                  <input name="name" class="form-control" placeholder="Full name" type="text">
+                  <input name="username" class="form-control" placeholder="Username" type="text">
               </div> <!-- form-group// -->
               <div class="form-group input-group">
                 <div class="input-group-prepend">
@@ -59,7 +59,8 @@
               <div class="form-group">
                   <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
               </div> <!-- form-group// -->      
-              <p class="text-center">Have an account? <a href="">Log In</a> </p>                                                                 
+              <p class="text-center">Have an account? <a href="/login">Log In</a> </p>        
+              <h3 class="err-msg"><%=msg%></h3>                                                         
           </form>
 
         </div>
