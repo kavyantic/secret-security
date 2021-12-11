@@ -23,5 +23,6 @@ body {
 
 .err-msg {
   color:red;
+  font-size:0.3em;
   padding:4%;
 }

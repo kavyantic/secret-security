@@ -4,7 +4,7 @@ const validator = require('mongoose-validator')
 
 
 retailerSchema = new mongoose.Schema({
-    username:String,
+    username:{String},
     accountType:{type:Number,required:true},
     password: {
       type: String,
@@ -15,13 +15,37 @@ retailerSchema = new mongoose.Schema({
   }).plugin(passportLocalMongoose)
   
 
-customerIdSchema = {
-  // ref:{type:}
+userSchema = new mongoose.Schema({
+    username:{String},
+    accountType:{type:Number,required:true},
+    password: {
+      type: String,
+      minlength: 8,
+      maxlength: 16,
+      trim: true,
+    }
+  }).plugin(passportLocalMongoose)
+  
+
+customerInfoSchema = {
+  ref:{
+    type:mongoose.Schema.Types.ObjectId
+  },
   active:Boolean,
-  name:String,
-  kno:{type:String,unique:true},
-  state:{type:String,required:true},
-  department:{type:String,required:true}
+  customerName:String,
+  kno:{
+    type:String,
+    unique:true,
+    required:true
+  },
+  state:{
+    type:String,
+    required:true
+  },
+  department:{
+    type:String,
+    required:true
+  }
 }
 
 retailerInfoSchema = new mongoose.Schema({
@@ -36,6 +60,8 @@ retailerInfoSchema = new mongoose.Schema({
     type: String,
     lowercase: true,
     trim: true,
+    require:[true,"Please enter your email"],
+    unique:[true,"A retailer with this email already exists"],
     validate: [
       validator({
         validator: 'isEmail',
@@ -45,17 +71,16 @@ retailerInfoSchema = new mongoose.Schema({
   },
   phone:{
     type:String,
-    unique:true,
+    unique:[true,"Please provide your phone number"],
     minlength:10,
     maxlength:10,
     $regex: '^[6-9]\d{9}$' 
   },
   distributor:{
-    type:String,
-    unique:true
+    type:mongoose.Schema.Types.ObjectId,
   },
   billSubmitted:[
-    customerIdSchema
+    customerInfoSchema
   ]
 })
 
@@ -72,6 +97,8 @@ distributorInfoSchema = new mongoose.Schema({
   email:{
     type: String,
     lowercase: true,
+    require:[true,"Please enter your email"],
+    unique:[true,"A distributor with this email already exists"],
     trim: true,
     validate: [
       validator({
@@ -87,7 +114,7 @@ distributorInfoSchema = new mongoose.Schema({
 
   },
  retailers:[
-  retailerInfoSchema
+  {type:mongoose.Schema.Types.ObjectId}
  ]
 })
 
@@ -133,7 +160,7 @@ exports  =  {
 
   retailerSchema,
   // adminInfoSchema, 
-  customerIdSchema,
+  customerInfoSchema,
   retailerInfoSchema,
   distributorInfoSchema
 }; 
