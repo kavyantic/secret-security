@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const validator = require('mongoose-validator')
 
-
 retailerSchema = new mongoose.Schema({
     username:{String},
     accountType:{type:Number,required:true},
@@ -14,7 +13,6 @@ retailerSchema = new mongoose.Schema({
     }
   }).plugin(passportLocalMongoose)
   
-
 userSchema = new mongoose.Schema({
     username:{String},
     accountType:{type:Number,required:true},
@@ -26,8 +24,7 @@ userSchema = new mongoose.Schema({
     }
   }).plugin(passportLocalMongoose)
   
-
-customerInfoSchema = {
+customerInfoSchema =new mongoose.Schema({
   ref:{
     type:mongoose.Schema.Types.ObjectId
   },
@@ -45,8 +42,13 @@ customerInfoSchema = {
   department:{
     type:String,
     required:true
-  }
-}
+  },
+  billDueDate:{
+    type:String
+  },
+  amount:String
+
+})
 
 retailerInfoSchema = new mongoose.Schema({
   active:Boolean,
@@ -77,14 +79,14 @@ retailerInfoSchema = new mongoose.Schema({
     $regex: '^[6-9]\d{9}$' 
   },
   distributor:{
-    type:mongoose.Schema.Types.ObjectId,
+    required:true,
+    // type:mongoose.Schema.Types.ObjectId,
+    type:String
   },
   billSubmitted:[
-    customerInfoSchema
+    {type:mongoose.Schema.Types.ObjectId}
   ]
 })
-
-
 
 distributorInfoSchema = new mongoose.Schema({
   active:Boolean,
@@ -118,8 +120,6 @@ distributorInfoSchema = new mongoose.Schema({
  ]
 })
 
-
-
 adminInfoSchema = new mongoose.Schema({
   active:Boolean,
   username:{
@@ -147,9 +147,18 @@ adminInfoSchema = new mongoose.Schema({
 })
   
 
-// const Retailer = mongoose.model('Retailer', retailerInfoSchema);
-// var ret = new Retailer({username:""})
-// ret.set
+
+
+
+// mongoose.connect('mongodb://localhost:27017/rechargePortal',{useNewUrlParser:true,useUnifiedTopology:true})
+// mongoose.set('useCreateIndex',true)
+
+// const RetailerInfo = mongoose.model('RetailerInfo', retailerInfoSchema);
+// var ret = new RetailerInfo({username:"kavyss",email:"rahulkvy9610@gmail.com",phone:"4545454454",distributor:"sdfsd",})
+// // ret.save((err,doc)=>{
+// //   console.log(err,doc);
+// // })
+// RetailerInfo.
 // console.log(ret.validateSync())
 
 
