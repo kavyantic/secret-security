@@ -1,16 +1,27 @@
-module.exports = function(app){
+const  {
+  Retailer,
+  RetailerInfo,
+  DistributorInfo,
+  AdminInfo,
+  CustomerInfo
+} = require('../mongooseSchema')
 
 
 
 
 
-app.get('/dashboard/retailer/',(req,res)=>{
-        if(req.isAuthenticated() && req.user.accountType==2){
-          res.render('dashboard-retailer')
+module.exports = function(app,passport){
+
+
+
+
+
+app.get('/dashboard/distributor/',(req,res)=>{
+        if(req.isAuthenticated() && req.user.accountType==1){
+          res.render('dashboard-distributor')
         }
         else {
           res.redirect('/login')
-      
         }
       })
       
@@ -20,20 +31,21 @@ app.post('/login/distributor/',(req,res)=>{
         const {username,password}= req.body
         DistributorInfo.findOne({username:username},(err,foundDistributor)=>{
           if(err || foundDistributor == null){
-            res.redirect('/register',{msg:err?err:"Somthing went wrong"})
+            res.redirect(`/register?query=${err?err:"Somthing went wrong"}`)
           }
-          else {
+          else { 
             const retailer = new Retailer({
-              username:username,
-              password:password
-            })
+                username:username,
+                password:password,
+                accountType:1
+              })
             req.login(retailer,(err)=>{
               if(err){
                 console.log(err);
                 res.redirect('/register',{msg:err})
               } else {
                 passport.authenticate("local ")(req,res,function(){
-                  res.redirect('/dashboard/admin/')
+                  res.redirect('/dashboard/distributor/')
                 })
               }
             })
@@ -69,8 +81,8 @@ app.post('/register/distributor',function(req,res){
                     res.redirect(`/register?query=${err}`)
                   } else {
                           passport.authenticate('local')(req,res,()=>{
-                          res.redirect('/dashboard')
-                       })
+                            res.redirect('/dashboard/distributor/')
+                        })
                     }
                  })
                }

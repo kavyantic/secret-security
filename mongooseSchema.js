@@ -146,6 +146,11 @@ adminInfoSchema = new mongoose.Schema({
   }
 })
   
+var Retailer = mongoose.model('Retailer',retailerSchema)
+var RetailerInfo = mongoose.model('RetailerInfo',retailerInfoSchema)
+var DistributorInfo = mongoose.model('DistributorInfo',distributorInfoSchema)
+var AdminInfo = mongoose.model('AdminInfo',adminInfoSchema)
+var CustomerInfo  = mongoose.model('CustomerInfo',customerInfoSchema)
 
 
 
@@ -162,14 +167,11 @@ adminInfoSchema = new mongoose.Schema({
 // console.log(ret.validateSync())
 
 
+module.exports = {
+  Retailer,
+  RetailerInfo,
+  DistributorInfo,
+  AdminInfo,
+  CustomerInfo
+}
 
-
-
-exports  =  {
-
-  retailerSchema,
-  // adminInfoSchema, 
-  customerInfoSchema,
-  retailerInfoSchema,
-  distributorInfoSchema
-}; 

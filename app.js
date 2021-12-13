@@ -11,7 +11,6 @@ const res = require('express/lib/response');
 const format = require('string-format')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-require('./mongooseSchema')
 
 mongoose.connect('mongodb://localhost:27017/rechargePortal',{useNewUrlParser:true,useUnifiedTopology:true})
 mongoose.set('useCreateIndex',true)
@@ -27,23 +26,24 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.set('view engine','ejs');
-require('./routes/admin')(app)
-require('./routes/retailer')(app)
-require('./routes/distributor')(app)
+require('./routes/admin')(app,passport)
+require('./routes/retailer')(app,passport)
+require('./routes/distributor')(app,passport)
 
-const Retailer = mongoose.model('Retailer',retailerSchema)
-const RetailerInfo = mongoose.model('RetailerInfo',retailerInfoSchema)
-const DistributorInfo = mongoose.model('DistributorInfo',distributorInfoSchema)
-const AdminInfo = mongoose.model('AdminInfo',adminInfoSchema)
-const CustomerInfo  = mongoose.model('CustomerInfo',customerInfoSchema)
+// var Retailer = mongoose.model('Retailer',retailerSchema)
+// var RetailerInfo = mongoose.model('RetailerInfo',retailerInfoSchema)
+// var DistributorInfo = mongoose.model('DistributorInfo',distributorInfoSchema)
+// var AdminInfo = mongoose.model('AdminInfo',adminInfoSchema)
+// var CustomerInfo  = mongoose.model('CustomerInfo',customerInfoSchema)
 
-module.exports = {
+const  {
   Retailer,
   RetailerInfo,
   DistributorInfo,
   AdminInfo,
   CustomerInfo
-}
+} = require('./mongooseSchema')
+
 
 passport.use(Retailer.createStrategy());
 passport.serializeUser((user, done)=> {done(null, user);});

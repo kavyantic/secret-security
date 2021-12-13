@@ -1,13 +1,17 @@
 const format = require('string-format')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const  {
+  Retailer,
+  RetailerInfo,
+  DistributorInfo,
+  AdminInfo,
+  CustomerInfo
+} = require('../mongooseSchema')
+
 apiURL = "https://www.doopme.com/RechargeAPI/RechargeAPI.aspx?MobileNo=8559948628&APIKey=loUrBAjEvCTxjjYXPYDClRdBY9nXbJoDkbe&REQTYPE=BILLINFO&SERCODE={0}&CUSTNO={1}&REFMOBILENO=9090890989&AMT=0&STV=0&FIELD1=0&FIELD2=[FIELD2]&FIELD3=[FIELD3]&FIELD4=[FIELD4]&FIELD5=[FIELD5]&PCODE=800008&LAT=25.5941&LONG=85.1376&RESPTYPE=JSON"
 
 
-module.exports = function(app){
-
-
-
-
+module.exports = function(app,passport){
 
  app.get('/dashboard/retailer/',(req,res)=>{
         if(req.isAuthenticated() && req.user.accountType==2){
@@ -28,20 +32,21 @@ module.exports = function(app){
         const {username,password}= req.body
         RetailerInfo.findOne({username:username},(err,foundRetailer)=>{
           if(err || foundRetailer == null){
-            res.redirect('/register',{msg:err?err:"Somthing went wrong"})
+            res.redirect(`/register?query=${err?err:"Somthing went wrong"}`)
           }
           else {
             const retailer = new Retailer({
-              username:username,
-              password:password
-            })
+                username:username,
+                password:password,
+                accountType:3
+              })
             req.login(retailer,(err)=>{
               if(err){
                 console.log(err);
                 res.redirect('/register',{msg:err})
               } else {
                 passport.authenticate("local ")(req,res,function(){
-                  res.redirect('/dashboard/admin/')
+                  res.redirect('/dashboard/retailer/')
                 })
               }
             })
@@ -86,8 +91,8 @@ app.post('/register/retailer',function(req,res){
                         res.render('register',{msg:err})
                       } else {
                               passport.authenticate('local')(req,res,()=>{
-                              res.redirect('/dashboard')
-                           })
+                                res.redirect('/dashboard/retailer/')
+                            })
                         }
                      })
                    }
