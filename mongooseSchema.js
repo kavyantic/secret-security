@@ -24,7 +24,7 @@ userSchema = new mongoose.Schema({
     }
   }).plugin(passportLocalMongoose)
   
-customerInfoSchema =new mongoose.Schema({
+customerInfoSchema = new mongoose.Schema({
   ref:{
     type:mongoose.Schema.Types.ObjectId
   },
@@ -50,15 +50,33 @@ customerInfoSchema =new mongoose.Schema({
 
 })
 
+
+
+
+
 retailerInfoSchema = new mongoose.Schema({
   active:Boolean,
+  balance:{
+    default:0,
+    type:Number
+  },
+  usedBalance:{
+    default:0,
+    type:Number
+  },
   username:{
     type:String,
     unique:true,
     index:true,
     required:true
   },
-  email:{
+  password: {
+    type: String,
+    minlength: 8,
+    maxlength: 16,
+    trim: true,
+  },
+    email:{
     type: String,
     lowercase: true,
     trim: true,
@@ -90,11 +108,25 @@ retailerInfoSchema = new mongoose.Schema({
 
 distributorInfoSchema = new mongoose.Schema({
   active:Boolean,
+  balance:{
+    default:0,
+    type:Number
+  },
+  usedBalance:{
+    default:0,
+    type:Number
+  },
   username:{
     type:String,
     unique:true,
     index:true,
     required:true
+  },
+  password: {
+    type: String,
+    minlength: 8,
+    maxlength: 16,
+    trim: true,
   },
   email:{
     type: String,

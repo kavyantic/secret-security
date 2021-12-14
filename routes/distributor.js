@@ -17,13 +17,20 @@ module.exports = function(app,passport){
 
 
 app.get('/dashboard/distributor/',(req,res)=>{
-        if(req.isAuthenticated() && req.user.accountType==1){
-          res.render('dashboard-distributor')
-        }
-        else {
-          res.redirect('/login')
-        }
-      })
+  if(req.isAuthenticated()){
+    DistributorInfo.findOne({username:req.user.username},(err,foundDistributor)=>{
+    if(err || !foundDistributor){
+       res.redirect(`/lodin?query=${err?err:"Somthing went wrong"}`)
+     }
+     else {
+       res.render('dashboard-distributor')
+     }
+    })
+   }
+   else {
+       res.redirect('/login')
+   }
+})
       
       
 
@@ -91,9 +98,26 @@ app.post('/register/distributor',function(req,res){
         })
       })
       
+////////////////////////////////         API            ////////////////////////////////////////
+ 
 
-
-
+app.get('/distributor/retailer/info',(req,res)=>{
+  if(req.isAuthenticated()){
+    DistributorInfo.findOne({username:req.user.username},(err,foundDistributor)=>{
+    if(err || !foundDistributor){
+       res.redirect(`/register?query=${err?err:"Somthing went wrong"}`)
+     }
+     else {
+       RetailerInfo.find({ '_id': { $in: foundDistributor.retailers}},(err,docs)=>{
+         res.send(docs)
+       })
+     }
+    })
+   }
+   else {
+       res.redirect('/login')
+   }
+})
 
 
 

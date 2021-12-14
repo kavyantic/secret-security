@@ -103,6 +103,10 @@ app.post('/register/retailer',function(req,res){
         })
       })
 
+
+////////////////////////////////         API            ////////////////////////////////////////
+
+
 app.post('/retailer/submit/',(req,res)=>{
         const {customerName,kno,state,department} = req.body
         if(req.isAuthenticated()){

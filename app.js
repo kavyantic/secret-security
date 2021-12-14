@@ -67,17 +67,35 @@ app.get('/login',(req,res)=>{
   res.render('login')
 })
 
+app.patch('/admin/distributor/set/:username/',(req,res)=>{
+  const {username:distributor,field,value} = req.params
+  if(req.isAuthenticated()){
+    AdminInfo.findOne({username:req.user.username},(err,foundAdmin)=>{
+      if(err){
+       res.redirect(`/register?query=${err?err:"Somthing went wrong"}`)
+     }
+     else {
+        DistributorInfo.updateOne({username:distributor}, {$set:req.body}, {new:true}, (error, doc) => {
+          if(err){
+            console.log(err);
+            res.send(err)
+          }
+          else {
+            console.log(doc);
+            res.send(doc)
+          }
+        });;
+     }
+    })
+   }
+   else {
+       res.redirect('/login')
+   }
+
+})
 
 
 
-// app.post('/test',(req,res)=>{
-//   const kno = req.body.kno
-//   const department = req.body.department
-//   fetch(format(apiURL,department,kno)).then((billInfo)=>billInfo.text()).then(text=>{
-//     console.log(text);
-//     res.send(JSON.parse(text))
-//   })
-// })
 
 
 
