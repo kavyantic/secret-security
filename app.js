@@ -61,16 +61,16 @@ admin = {
   accountType:0
 }
 
-try{
+// try{
 
-  admin = new Retailer(admin)
-  admin.save()
-  adminInfo = new AdminInfo(admin)
-  adminInfo.save()
-}
-catch{
-console.log("already created");
-}
+//   admin = new Retailer(admin)
+//   admin.save()
+//   adminInfo = new AdminInfo(admin)
+//   adminInfo.save()
+// }
+// catch{
+// console.log("already created");
+// }
  
 
 
