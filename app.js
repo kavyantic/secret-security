@@ -21,7 +21,7 @@ const app = express()
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(express.static('public'));
 app.use(session({
-  secret:process.env.SESSION_SECRET,
+  secret:"ourSecret",
   resave:false,
   saveUninitialized:true
 }))
