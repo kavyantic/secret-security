@@ -135,7 +135,7 @@ retailerInfoSchema = new mongoose.Schema({
     $regex: '^[6-9]\d{9}$' 
   },
   distributor:{
-    required:true,
+    // required:true,
     // type:mongoose.Schema.Types.ObjectId,
     type:String
   },
