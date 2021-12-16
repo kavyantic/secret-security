@@ -61,16 +61,16 @@ admin = {
   accountType:0
 }
 
-// try{
+try{
 
   admin = new Retailer(admin)
   admin.save()
   adminInfo = new AdminInfo(admin)
   adminInfo.save()
-// }
-// catch{
-// console.log("already created");
-// }
+}
+catch{
+console.log("already created");
+}
  
 
 
@@ -139,6 +139,6 @@ CustomerInfo.remove((err)=>{
 })
 
 
-app.listen(3000,function(){
+app.listen(process.env.PORT || 3000,function(){
   console.log('server started on port 3000');
 })
