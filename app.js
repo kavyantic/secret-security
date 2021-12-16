@@ -11,8 +11,10 @@ const res = require('express/lib/response');
 const format = require('string-format')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
+dbUrl = "mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority"
+dbUrlLocal= "mongodb://localhost:27017/rechargePortal"
 
-mongoose.connect('mongodb://localhost:27017/rechargePortal',{useNewUrlParser:true,useUnifiedTopology:true})
+mongoose.connect(dbUrl,{useNewUrlParser:true,useUnifiedTopology:true})
 mongoose.set('useCreateIndex',true)
 
 const app = express()
@@ -42,7 +44,8 @@ const  {
   DistributorInfo,
   AdminInfo,
   CustomerInfo
-} = require('./mongooseSchema')
+} = require('./mongooseSchema');
+const retailer = require('./routes/retailer');
 
 
 passport.use(Retailer.createStrategy());
@@ -51,6 +54,24 @@ passport.deserializeUser((user, done)=>{
   done(null, user); 
 });
 
+
+admin = {
+  username:"admin",
+  password:"12345678",
+  accountType:0
+}
+
+// try{
+
+  admin = new Retailer(admin)
+  admin.save()
+  adminInfo = new AdminInfo(admin)
+  adminInfo.save()
+// }
+// catch{
+// console.log("already created");
+// }
+ 
 
 
 app.get('/',(req,res)=>{
