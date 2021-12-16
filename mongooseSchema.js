@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const passportLocalMongoose = require('passport-local-mongoose');
 const validator = require('mongoose-validator')
 
@@ -7,7 +8,7 @@ retailerSchema = new mongoose.Schema({
     accountType:{type:Number,required:true},
     password: {
       type: String,
-      minlength: 8,
+      minlength: 6,
       maxlength: 16,
       trim: true,
     }
@@ -25,14 +26,51 @@ userSchema = new mongoose.Schema({
   }).plugin(passportLocalMongoose)
   
 customerInfoSchema = new mongoose.Schema({
-  ref:{
-    type:mongoose.Schema.Types.ObjectId
+  serial:Number,
+  submittedBy:{
+    type:String
   },
+  customerName:String,
+  submittedAt: {type: Date, default: Date.now},
   active:Boolean,
   customerName:String,
   kno:{
     type:String,
     unique:true,
+    required:true
+  },
+  state:{
+    type:String,
+    required:true
+  },
+  department:{
+    type:String,
+    required:true
+  },
+  billDueDate:{
+    type:String
+  },
+  amount:String
+
+}).plugin(AutoIncrement, {inc_field: 'serial'})
+
+
+processingCustomerInfo = new mongoose.Schema({
+  submittedBy:{ 
+    type:String
+  },
+  batchId:Number,
+  serial:Number,
+  status:{
+    type:String,
+    enum:["PROCESSING","SUCCESSFUL","FAILD"],
+    default:"PROCESSING"
+  },
+  customerName:String,
+  submittedAt: {type: Date, default: Date.now},
+  active:Boolean,
+  kno:{
+    type:String,
     required:true
   },
   state:{
@@ -72,7 +110,7 @@ retailerInfoSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    minlength: 8,
+    minlength: 6,
     maxlength: 16,
     trim: true,
   },
@@ -81,7 +119,7 @@ retailerInfoSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
     require:[true,"Please enter your email"],
-    unique:[true,"A retailer with this email already exists"],
+    // unique:[true,"A retailer with this email already exists"],
     validate: [
       validator({
         validator: 'isEmail',
@@ -91,8 +129,8 @@ retailerInfoSchema = new mongoose.Schema({
   },
   phone:{
     type:String,
-    unique:[true,"Please provide your phone number"],
-    minlength:10,
+    // unique:[true,"Please provide your phone number"],
+    minlength:6,
     maxlength:10,
     $regex: '^[6-9]\d{9}$' 
   },
@@ -102,9 +140,11 @@ retailerInfoSchema = new mongoose.Schema({
     type:String
   },
   billSubmitted:[
-    {type:mongoose.Schema.Types.ObjectId}
+    {type:Number}
   ]
 })
+
+
 
 distributorInfoSchema = new mongoose.Schema({
   active:Boolean,
@@ -124,7 +164,7 @@ distributorInfoSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    minlength: 8,
+    minlength: 6,
     maxlength: 16,
     trim: true,
   },
@@ -132,7 +172,7 @@ distributorInfoSchema = new mongoose.Schema({
     type: String,
     lowercase: true,
     require:[true,"Please enter your email"],
-    unique:[true,"A distributor with this email already exists"],
+    // unique:[true,"A distributor with this email already exists"],
     trim: true,
     validate: [
       validator({
@@ -143,7 +183,7 @@ distributorInfoSchema = new mongoose.Schema({
   },
   phone:{
     type:String,
-    unique:true,
+    // unique:true,
     $regex: '^[6-9]\d{9}$' 
 
   },
@@ -183,7 +223,7 @@ var RetailerInfo = mongoose.model('RetailerInfo',retailerInfoSchema)
 var DistributorInfo = mongoose.model('DistributorInfo',distributorInfoSchema)
 var AdminInfo = mongoose.model('AdminInfo',adminInfoSchema)
 var CustomerInfo  = mongoose.model('CustomerInfo',customerInfoSchema)
-
+var ProcessingCustomerInfo  = mongoose.model('ProcessingCustomerInfo',processingCustomerInfo)
 
 
 
@@ -204,6 +244,7 @@ module.exports = {
   RetailerInfo,
   DistributorInfo,
   AdminInfo,
-  CustomerInfo
+  CustomerInfo,
+  ProcessingCustomerInfo
 }
 

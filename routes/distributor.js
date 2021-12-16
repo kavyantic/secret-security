@@ -23,7 +23,7 @@ app.get('/dashboard/distributor/',(req,res)=>{
        res.redirect(`/lodin?query=${err?err:"Somthing went wrong"}`)
      }
      else {
-       res.render('dashboard-distributor')
+       res.render('distributor/dashboard-distributor')
      }
     })
    }
@@ -66,6 +66,7 @@ app.post('/register/distributor',function(req,res){
         const {username, password, email, phone} = req.body
         var distributorInfo = new DistributorInfo({
           username:username,
+          password:password,
           email:email,
           phone:phone,
           retailers:[]

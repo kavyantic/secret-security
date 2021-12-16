@@ -52,11 +52,10 @@ passport.deserializeUser((user, done)=>{
 });
 
 
-async function validateCustomerInfo(info){
-  return undefined
-}
 
-
+app.get('/',(req,res)=>{
+  res.redirect('/login')
+})
 
 app.get('/register',(req,res)=>{
   res.render('register',{msg:req.query.query})

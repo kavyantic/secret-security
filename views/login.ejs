@@ -8,7 +8,19 @@
         <div class="card-body">
 
           <!-- Makes POST request to /register route -->
-          <form action="/login/admin/" method="POST">
+          <form action="/login/admin/" method="POST" id="entry-form">
+            <div class="form-group">
+              <div class="form-group input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> <i class="fas fa-users-cog"></i> </span>
+              </div>
+              <select name="accountType" class="form-control" id="select-account-type">
+                <option selected=""> Admin</option>
+                <option>Retailer</option>
+                <option>Distributor</option>
+
+              </select>
+            </div>
             <div class="form-group">
               <label for="name">Username</label>
               <input type="username" class="form-control" name="username">
@@ -38,4 +50,4 @@
   </div>
 </div>
 
-<%- include('partials/header') %>
+<%- include('partials/footer') %>
