@@ -134,7 +134,7 @@ retailerInfoSchema = new mongoose.Schema({
     maxlength:10,
     $regex: '^[6-9]\d{9}$' 
   },
-  distributor:{
+  sponserId:{
     // required:true,
     // type:mongoose.Schema.Types.ObjectId,
     type:String
