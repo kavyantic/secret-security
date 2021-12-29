@@ -1,7 +1,6 @@
 {
-  "name": "secrets",
+  "name": "recharge-portal",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,6 +17,7 @@
     "mongoose": "^5.13.13",
     "mongoose-encryption": "^2.1.2",
     "mongoose-sequence": "^5.3.1",
+    "mongoose-unique-validator": "^3.0.0",
     "mongoose-validator": "^2.1.0",
     "node-fetch": "^3.1.0",
     "passport": "^0.5.0",
@@ -25,5 +25,14 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.1.0",
     "string-format": "^2.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sharmakavya281105/secret-security-project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sharmakavya281105/secret-security-project/issues"
+  },
+  "homepage": "https://github.com/sharmakavya281105/secret-security-project#readme",
+  "description": ""
 }

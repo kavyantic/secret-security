@@ -1,28 +1,28 @@
 
-body {
-  background-color: #E8ECEF;
-}
 
-.centered {
-    padding-top: 200px;
-    text-align: center;
-}
-
-.secret-text {
-  text-align: center;
-  font-size: 2rem;
-  color: #fff;
-  background-color: #000;
-}
-
-.login-page-heading {
-  text-align: center;
-  padding-bottom: 3%;
+table {
+  font-size: 0.8em;
 }
 
 
-.err-msg {
-  color:red;
-  font-size:0.3em;
-  padding:4%;
+button.dt-button.buttons-html5 {
+  border-radius: 5%;
+  border:none;
+  transition: 0.3s;
 }
+button.dt-button.buttons-html5:hover{
+  background-color: grey;
+  transition: 0.3s;
+  color:white;
+
+}
+
+#upload-bill-form{
+  display: inline-block;
+  position: absolute;
+  right: 0%;
+}
+
+/* #upload-bill-form label{
+  color:blue;
+} */

@@ -11,7 +11,8 @@ const ElectricityBill = mongoose.model('ElectricityBill')
 const ProElecBill = mongoose.model('ProcessingElectricityBill')
 const WaterBill = mongoose.model('WaterBill')
 const ProWaterBill = mongoose.model('ProcessingWaterBill')
-
+var templatePath = 'superDistributor'
+var accountType = templatePath.toLowerCase()
 // const Transaction = mongoose.model('Transaction')
 const passport = require('passport');
 
@@ -29,26 +30,23 @@ const passport = require('passport');
 //   return next()
 // })
 router.use((req,res,next)=>{
-  if(req.isAuthenticated() && req.user.accountType==="admin"){
+  if(req.isAuthenticated() && req.user.accountType===accountType){
       return next()
   } else {
-    console.log(req.method);
       if(req.method==="GET"){
-      if(!(req.user.accountType ==="admin")){res.redirect(`/login?msg=You are not an Admin&red=admin/${req.url}`)}
-        res.redirect(`/login?msg=Please login again&red=admin/${req.url}`)
+      res.redirect(`/login?msg=Please login again&red=${templatePath}/${req.url}`) 
       }
       else {
         res.redirect(`/login?msg=Please login again`)
       }
   }
-  
 })
 router.get('/dashboard',(req,res)=>{
      Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
        info = {
          user:foundAdmin
        }
-      res.render('admin/dashboard',{info:info})
+      res.render(`${templatePath}/dashboard`,{info:info})
      })
 })
 router.get('/bills/electricity/new',(req,res)=>{
@@ -60,7 +58,7 @@ router.get('/bills/electricity/new',(req,res)=>{
         query:"electiricity",
         title:"Electricity bills"
       }
-     res.render('admin/newBills',{info:info})
+     res.render(`${templatePath}/newBills`,{info:info})
     })
   })
 })
@@ -73,7 +71,7 @@ router.get('/bills/electricity/processing/',(req,res)=>{
         query:"electricity",
         title:"Electricity bills"
       }
-     res.render('admin/processingBills',{info:info})
+     res.render(`${templatePath}/processingBills`,{info:info})
     })
    })
 })
@@ -86,7 +84,7 @@ router.get('/bills/water/new',(req,res)=>{
         query:"water",
         title:"Water bills"
       }
-     res.render('admin/newBills',{info:info})
+     res.render(`${templatePath}/newBills`,{info:info})
     })
   })
 })
@@ -99,7 +97,7 @@ router.get('/bills/water/processing',(req,res)=>{
         query:"water",
         title:"Water bills"
       }
-     res.render('admin/processingBills',{info:info})
+     res.render(`${templatePath}/processingBills`,{info:info})
     })
    })
 })
@@ -116,7 +114,7 @@ router.get('/members/list',(req,res)=>{
         distributors:result[1],
         superDistributor:result[2]
       }
-     res.render('admin/listMembers',{info:info})
+     res.render(`${templatePath}/listMembers`,{info:info})
     })
   })
 })
@@ -125,10 +123,10 @@ router.get('/members/register',(req,res)=>{
     info = {
       user:foundAdmin
     }
-   res.render('admin/registerMember',{info:info})
+   res.render(`${templatePath}/registerMember`,{info:info})
   })
 })
-router.get('/members/update/:type/:user',(req,res)=>{ 
+router.get('/members/update/:type/:user',(req,res)=>{
   let user = req.params.user
   let type = req.params.type.toLowerCase()
   Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
@@ -144,7 +142,7 @@ router.get('/members/update/:type/:user',(req,res)=>{
     info = {
       user:foundAdmin
     }
-   res.render('admin/updateMember',{info:info})
+   res.render(`${templatePath}/updateMember`,{info:info})
   })
 })
 
@@ -162,8 +160,6 @@ router.post('/members/register/:type',(req,res)=>{
     model = new Retailer(req.body)
   } else if(type==="distributor"){
     model = new Distributor(req.body)
-  } else  if(type==="superdistributor"){
-    model = new SuperDistributor(req.body)
   }
   else {
     res.status(401).send({err:"Invalid Type of User"})
@@ -190,3 +186,4 @@ router.post('/members/register/:type',(req,res)=>{
  
 })
 
+module.exports = router

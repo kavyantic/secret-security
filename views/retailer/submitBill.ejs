@@ -1,0 +1,88 @@
+<%-include('partials/header') %>
+
+  
+                    
+                    <!-- Page Heading -->
+                    <div class="container mt-5">
+                        <div class="row">
+                          
+                          <div class="col-sm-6  ">
+                            <div class="card">
+                              <div class="card-body">
+                                <h3 class="login-page-heading">Submit a <%=info.billType %> Bill</h3>
+                      
+                                <!-- Makes POST request to /login route -->
+                                  <form actionid="signup-form" action="/retailer/bills/<%=info.billType %>/submit " method="post" id="retailer-submit-bill">
+                                  <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"> <i class="fas fa-users-cog"></i> </span>
+                                  </div>
+                                  <select name="state" class="form-control" id="select-account-type">
+                                    <option>Rajasthan</option>
+                                  </select>
+                                </div>
+
+                                <div class="form-group input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fas fa-users-cog"></i> </span>
+                                </div>
+                                <select name="department" class="form-control" id="select-account-type">
+                                  <option>JVVNL</option>
+                                </select>
+                              </div>
+                                  <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                     </div>
+                                        <input name="name" class="form-control" placeholder="Customer name" type="text">
+                                    </div> <!-- form-group// -->
+                                    <div class="form-group input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                                     </div>
+                                        <input name="kno" class="form-control" placeholder="CustomerID" type="text" required>
+                                    </div> 
+                                    <!-- <div class="form-group input-group" id="sponsered-by-input">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fas fa-asterisk"></i> </span>
+                                        </div>
+                                        <input name="sponser" class="form-control" placeholder="Sponser ID">
+                                    </div>  -->
+                                    
+                                    <!-- form-group// -->
+                                   
+                                   
+                                   <!-- form-group end.// -->
+                                     <!-- form-group// -->
+                                    <!-- <div class="custom-control custom-checkbox">
+                                      <input name="ckeckbox" type="checkbox" class="custom-control-input" id="customCheck1">
+                                      <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
+                                    </div> -->
+                                    <!-- form-group// -->  
+                                    <h3 class="err-msg" style="color:red;font-size:1em;padding:4%;"><%=info.msg%></h3>                                                         
+                                                          
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-block"> Submit  </button>
+                                    </div>
+                                     <!-- form-group// -->      
+                                </form>
+                      
+                              </div>
+                            </div>
+                          </div>
+                      
+                          <!-- <div class="col-sm-4">
+                            <div class="card">
+                              <div class="card-body">
+                                <a class="btn btn-block" href="/auth/google" role="button">
+                                  <i class="fab fa-google"></i>
+                                  Sign In with Google
+                                </a>
+                              </div>
+                            </div>
+                          </div> -->
+                      
+                        </div>
+                      </div>
+
+<%-include('partials/footer',{path:'submit'}) %>
