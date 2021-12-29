@@ -41,28 +41,16 @@ app.set('view engine','ejs');
 app.use(require('./routes'));
 require('./config/passport');
 
+// admin = {
+//   username:"admin"
+//   ,password:"painter"
+//   ,accountType:"admin"
+// }
+// User = mongoose.model('User')
+// Admin = mongoose.model('Admin')
 
- 
-
-
-app.get('/remove',(req,res)=>{
-  Retailer.remove((err)=>{
-    console.log(err);
-  })
-  RetailerInfo.remove((err)=>{
-    console.log(err);
-  })
-  DistributorInfo.remove((err)=>{
-    console.log(err);
-  })
-AdminInfo.remove((err)=>{
-    console.log(err);
-  })
-CustomerInfo.remove((err)=>{
-  console.log(err);
-})
-  res.send("removed")
-})
+a  = new User(admin).save()
+b = new Admin(admin).save()
 
 PORT = process.env.PORT||3000
 app.listen(PORT,function(){
