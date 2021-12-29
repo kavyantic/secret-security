@@ -49,8 +49,8 @@ require('./config/passport');
 // User = mongoose.model('User')
 // Admin = mongoose.model('Admin')
 
-a  = new User(admin).save()
-b = new Admin(admin).save()
+// a  = new User(admin).save()
+// b = new Admin(admin).save()
 
 PORT = process.env.PORT||3000
 app.listen(PORT,function(){
