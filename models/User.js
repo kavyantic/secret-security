@@ -40,9 +40,7 @@ userSchema.methods.verifyPassword = (password)=>{
   return true
 }
 
-userSchema.methods.take = ()=>{
-  return "take it "
-}
+
 
 
 mongoose.model("User",userSchema)

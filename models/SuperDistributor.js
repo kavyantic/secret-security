@@ -15,11 +15,24 @@ superDistributorSchema = new mongoose.Schema({
       default:0,
       type:Number
     },
+    myRetailers:[
+      {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Retailer"
+      }
+    ],
+    myDistributors:[
+      {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Distributor"
+      }
+    ],
    canSetServiceTime:{type:Boolean,default:true},
    canViewReport:{type:Boolean,default:true},
    canCreateAccount:{type:Boolean,default:true},
    canUploadBills:{type:Boolean,default:true},
    canAddMoney:{type:Boolean,default:true},
+   canDeductMoney:{type:Boolean,default:true}
   })
 
 

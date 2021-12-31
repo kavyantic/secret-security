@@ -1,20 +1,18 @@
-$(document).ready(function() {    
 
+$(document).ready(function() {    
     document.getElementById('upload-bill-status').addEventListener('change', (e)=>{
         getJsonFromExcel(e.target,(obj)=>{
-                            var formBody = [];
-                            url = "/admin/bills/electricity/uploadStatus"
-                            fetch(url, {
-                                method: 'POST',
-                                headers: {
-                                'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(obj)
-                            })
-                            .then(res=>res.json())
-                            .then(obj=>{alert(obj)})
-
-                        
+                             url = "/admin/bills/electricity/uploadStatus"
+                             axios({
+                                method: 'post',
+                                url: url,
+                                data: JSON.stringify(obj),
+                                contentType: "application/json"
+                                // dataType: "json",
+                              })
+                            // .then(res=>res.json())
+                            .then(obj=>{console.log(obj)})
+     
         })
         
     });

@@ -13,21 +13,36 @@ retailerSchema = new mongoose.Schema({
       default:0,
       type:Number
     },
-
-    sponserBy:{
+    sponseredByName:{
         type:String
     },
-    sponserId:{
-      // required:true,
+    sponseredBy:{
       type:mongoose.Schema.Types.ObjectId,
-   },
+      refPath:'sponseredModel'
+    },
+    sponseredModel:{
+      type:String,
+      enum:['Admin',"SuperDistributor","Distributor"]
+    },
     billSubmitted:[
       {type:Number}
     ]
     
   })
+  
+//  retailerSchema.statics.updateBalance = (username,amt)=>{
+//     amt = Number(amt)
+//     this.updateOne({username:username},{"$inc":{"balance":amt}},{},(err,doc)=>{
+//       return err,doc
+//     })
+//   }
 
 
+// mongoose.Schema.methods.addMoney = (amt)=>{
+//   amt = Number(amt)
+//   this.balance += amt 
+//   return await this.save()
+// }
 retailerSchema.plugin(uniqueValidator, {message: 'is already taken'});
 
 

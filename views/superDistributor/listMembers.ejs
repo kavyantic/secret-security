@@ -1,4 +1,4 @@
-<%-include('partials/header') %>
+<%-include('partials/header',{user:info.user}) %>
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Distributors</h1>
                     <div class="card shadow mb-4">
@@ -7,14 +7,13 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-striped" id="dataTable"  >
                                     <thead>
                                         <tr>
                                             <th>Username</th>
                                             <th>Password</th>
                                             <th>Email</th>
                                             <th>Balance</th>
-                                            <th>UsedBalance</th>
                                             <th>Phone</th>
                                             <th>Retailers</th>
                                             <th>Edit</th>
@@ -64,7 +63,6 @@
                                             <th>Password</th>
                                             <th>Email</th>
                                             <th>Balance</th>
-                                            <th>UsedBalance</th>
                                             <th>Phone</th>
                                             <th>Bills</th>
                                             <th>Sponsered</th>
@@ -88,7 +86,6 @@
                                                 <td><%=user.password%></td>
                                                 <td><%=user.email%></td>
                                                 <td><%=user.balance%></td>
-                                                <td><%=user.usedBalance%></td>
                                                  <td><%=user.phone%></td>
                                                 <td><%=user.retailers%></td>
                                                 <td><%=user.distributor%></td>
@@ -102,7 +99,7 @@
                     </div>
 
 
-                    <h1 class="h3 mb-2 text-gray-800">Super distributor</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Super  distributor</h1>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Retailers Info</h6>
@@ -116,7 +113,6 @@
                                             <th>Password</th>
                                             <th>Email</th>
                                             <th>Balance</th>
-                                            <th>UsedBalance</th>
                                             <th>Phone</th>
                                             <th>Bills</th>
                                             <th>Sponsered</th>
@@ -134,13 +130,12 @@
                                         </tr>
                                     </tfoot> -->
                                     <tbody>
-                                        <% info.retailers.forEach(user=>{%>
+                                        <% info.superDistributor.forEach(user=>{%>
                                             <tr>
                                                 <td><%=user.username%></td>
                                                 <td><%=user.password%></td>
                                                 <td><%=user.email%></td>
                                                 <td><%=user.balance%></td>
-                                                <td><%=user.usedBalance%></td>
                                                  <td><%=user.phone%></td>
                                                 <td><%=user.retailers%></td>
                                                 <td><%=user.distributor%></td>
@@ -176,5 +171,14 @@
                       </div>
                     </div>
                   </div>  -->
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>
+
+                    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                        ...
+                        </div>
+                    </div>
+                    </div>
       
 <%-include('partials/footer') %>

@@ -38,10 +38,6 @@ router.get('/dashboard',(req,res)=>{
       res.render('retailer/dashboard',{info:info})
      })
 })
-
-
-
-
 router.get('/bills/:billType/submit',(req,res)=>{
     billType = req.params.billType
     Retailer.findOne({username:req.user.username},(err,foundRetailer)=>{
@@ -52,7 +48,6 @@ router.get('/bills/:billType/submit',(req,res)=>{
         res.render('retailer/submitBill',{info:info})
     })
 })
-
 router.post('/bills/electricity/submit',(req,res)=>{
   const {customerName,kno,state,department} = req.body
   fetch(format(apiURL,department,kno))

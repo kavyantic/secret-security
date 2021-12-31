@@ -4,6 +4,11 @@ infoSkeleton = {
     name:{
       type:String
     },
+
+    date:{
+      type:Date,
+      default:Date.now
+    },
     address:String,
     username:{
       type:String,

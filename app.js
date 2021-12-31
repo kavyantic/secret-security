@@ -14,7 +14,8 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 var isProduction = process.env.NODE_ENV === 'production';
 
 dbUrl = isProduction?process.env.DB_URL:process.env.LOCAL_DB_URL
-mongoose.connect("mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true})
+
+mongoose.connect(process.env.LOCAL_DB_URL || "mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true})
 mongoose.set('useCreateIndex',true)
 
 require('./models/User')
@@ -24,6 +25,8 @@ require('./models/Distributor')
 require('./models/SuperDistributor')
 require('./models/WaterBill')
 require('./models/ElectricityBill')
+require('./models/Transaction')
+
 
 
 

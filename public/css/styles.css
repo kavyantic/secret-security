@@ -1,9 +1,30 @@
 
 
 table {
-  font-size: 0.8em;
+  /* font-size: 0.1em; */
+  
+  padding-right:0;
+  padding-left:0;
+
 }
 
+/* a {
+  text-decoration: none;
+  font-family:sans-serif;
+}
+a:hover{
+  transition: 2s;+
+   */
+  /* font-size: x-large;
+  text-decoration: none;
+} */
+
+span{
+  color:rgb(54, 54, 54);
+}
+#Balance {
+  color:rgb(rgb(61, 61, 61), green, blue);
+}
 
 button.dt-button.buttons-html5 {
   border-radius: 5%;
@@ -22,6 +43,8 @@ button.dt-button.buttons-html5:hover{
   position: absolute;
   right: 0%;
 }
+
+
 
 /* #upload-bill-form label{
   color:blue;
