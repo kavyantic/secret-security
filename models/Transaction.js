@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+const AutoIncrement = require('mongoose-auto-increment');
 const passportLocalMongoose = require('passport-local-mongoose');
 const validator = require('mongoose-validator')
 
@@ -12,21 +12,31 @@ const transactionSchema = new mongoose.Schema({
         default:Date.now
     },
     from:{
-        type:mongoose.Schema.Types.ObjectId,
-        refPath:"refModel"
+        id:{
+
+            type:mongoose.Schema.Types.ObjectId,
+            refPath:"refModel"
+        },
+        name:{
+            type:String
+        }
     },
     to:{
-        type:mongoose.Schema.Types.ObjectId,
-        refPath:"refModel"
+        id:{
+
+            type:mongoose.Schema.Types.ObjectId,
+            refPath:"refModel"
+        },
+        name:{
+            type:String
+        }
     },
     refModel:{
         type:String,
         enum:['Retailer','Distributor','SuperDistributor','Admin']
-    },
-    toName:String,
-    fromName:String
+    }
 })
-
+transactionSchema.plugin(AutoIncrement.plugin,{model:'Transaction',field:"id"}) 
 
 mongoose.model('Transaction',transactionSchema)
 

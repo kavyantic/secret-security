@@ -1,26 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script>
 
-  
-  
-  
-  
-   
-  </script>
-  
-  <form enctype="multipart/form-data">
-      <input id="upload" type=file  name="files[]">
-  </form>
-  
-      <textarea class="form-control" rows=35 cols=120 id="xlx_json"></textarea>
-  
-      <script>
-          document.getElementById('upload').addEventListener('change', handleFileSelect, false);
-  
-      </script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.min.js" integrity="sha512-W/mRQs9ZSFpF14X/4aRgQss7+HRsVXsph+Y6DGLeqIqK8IpO+rQz0ISUEXkTeeKF7tivoGv+Ru7SpocS/1qahg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</html>
-
-
+<%-include('partials/header',{user:""}) %>
+<div class="card-body border rounded" bis_skin_checked="1" data-select2-id="8">
+    <div class="form-group row mb-0" bis_skin_checked="1">
+        <div class="col-sm-2 col-6" bis_skin_checked="1">
+            <label>From Date</label>
+                <input name="fromDate" value="2021-12-04" id="fromDate" class="form-control" autocomplete="off" placeholder="From Date" type="date">
+                <div class="form-control-position" bis_skin_checked="1"><i class="bx bx-calendar"></i></div>
+        </div>
+        <div class="col-sm-2 col-6" bis_skin_checked="1">
+            <label>From Date</label>
+                <input name="toDate" value="2021-12-04" id="fromDate" class="form-control" autocomplete="off" placeholder="From Date" type="date">
+                <div class="form-control-position" bis_skin_checked="1"><i class="bx bx-calendar"></i></div>
+        </div>
+        <div class="col-sm-3 col-6" bis_skin_checked="1" data-select2-id="7">
+            <label>From</label>
+                <div class="form-group input-group">
+                    <!-- <div class="input-group-prepend">
+                      <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                  </div> -->
+                  <!-- <select  name="countryCode" class="custom-select" style="max-width: 50px;	appearance: none;  ">
+                    <option selected="selected" value="0" data-select2-id="2">MemberType</option>
+                    <option value="M" >MD</option>
+                    <option value="6" >DI</option>
+                    <option value="7" >RE</option>
+                  </select> -->
+                    <input name="phone" class="form-control" placeholder="MemberID" type="text">
+                  </div> 
+                <!-- <div class="form-control-position" bis_skin_checked="1"><i class="bx bx-user"></i></div> -->
+        </div>
+        <div class="col-sm-3 col-6" bis_skin_checked="1" data-select2-id="7">
+            <label>To</label>
+                <div class="form-group input-group">
+                    <!-- <div class="input-group-prepend">
+                      <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                  </div> -->
+                  <!-- <select  name="countryCode" class="custom-select" style="max-width: 50px;	appearance: none;  ">
+                    <option selected="selected" value="0" data-select2-id="2">MemberType</option>
+                    <option value="M" >MD</option>
+                    <option value="6" >DI</option>
+                    <option value="7" >RE</option>
+                  </select> -->
+                    <input name="phone" class="form-control" placeholder="MemberID" type="text">
+                  </div> 
+                <!-- <div class="form-control-position" bis_skin_checked="1"><i class="bx bx-user"></i></div> -->
+        </div>
+        <!-- <div class="col-sm-2 col-6" bis_skin_checked="1">
+            <label>MemberName</label>
+            <fieldset class="position-relative has-icon-left">
+                <input name="ctl00$ContentPlaceHolder1$txtForMemberName" type="text" id="ctl00_ContentPlaceHolder1_txtForMemberName" class="form-control" placeholder="MemberName">
+                <div class="form-control-position" bis_skin_checked="1"><i class="bx bx-user"></i></div>
+            </fieldset>
+        </div>
+        -->
+        <div class="col-sm-2 col-6" bis_skin_checked="1">
+            <label>&nbsp;</label>
+            <div class="input-group " bis_skin_checked="1">
+                <input type="submit" name="ctl00$ContentPlaceHolder1$btnSearch" value="Search ⌕" id="ctl00_ContentPlaceHolder1_btnSearch" class="btn btn-primary">
+            </div>
+        </div>
+    </div>
+</div>
+<%-include('partials/footer',{path:""}) %>

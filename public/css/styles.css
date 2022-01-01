@@ -1,4 +1,10 @@
 
+.dropdown-toggle::after {
+  content: none;
+}
+.custom-select::after {
+  content: none;
+}
 
 table {
   /* font-size: 0.1em; */
@@ -7,7 +13,10 @@ table {
   padding-left:0;
 
 }
-
+.horizontal-aligner{
+  display: inline-block;
+  margin:3%;
+}
 /* a {
   text-decoration: none;
   font-family:sans-serif;
@@ -18,12 +27,12 @@ a:hover{
   /* font-size: x-large;
   text-decoration: none;
 } */
-
+/* 
 span{
   color:rgb(54, 54, 54);
-}
+} */
 #Balance {
-  color:rgb(rgb(61, 61, 61), green, blue);
+  color:rgb(rgb(255, 255, 255), green, blue);
 }
 
 button.dt-button.buttons-html5 {
@@ -31,12 +40,11 @@ button.dt-button.buttons-html5 {
   border:none;
   transition: 0.3s;
 }
-button.dt-button.buttons-html5:hover{
+/* button.dt-button.buttons-html5:hover{
   background-color: grey;
   transition: 0.3s;
   color:white;
-
-}
+} */
 
 #upload-bill-form{
   display: inline-block;

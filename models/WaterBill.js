@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+const AutoIncrement = require('mongoose-auto-increment');
 const validator = require('mongoose-validator')
 const uniqueValidator = require('mongoose-unique-validator');
 
 
 
-waterBill = new mongoose.Schema({
+waterBillSchema = new mongoose.Schema({
     _id:Number,
     submittedBy:{
       type:mongoose.Schema.Types.ObjectId,
@@ -42,14 +42,14 @@ waterBill = new mongoose.Schema({
     amount:String
   
   })
-  // waterBill.plugin(AutoIncrement, {inc_field: '_id'})
+  waterBillSchema.plugin(AutoIncrement.plugin,{model:'WaterBill',field:"id"}) 
   
 
 
 
 
   
-processingWaterBill = new mongoose.Schema({
+processingWaterBillSchema = new mongoose.Schema({
     _id:Number,
     submittedBy:{
         type:mongoose.Schema.Types.ObjectId,
@@ -92,8 +92,9 @@ processingWaterBill = new mongoose.Schema({
     amount:String
   
   })
+  processingWaterBillSchema.plugin(AutoIncrement.plugin,{model:'ProcessingWaterBill',field:"batchId"}) 
 
   
 
-  mongoose.model('WaterBill',waterBill)
-  mongoose.model('ProcessingWaterBill',processingWaterBill)
+  mongoose.model('WaterBill',waterBillSchema)
+  mongoose.model('ProcessingWaterBill',processingWaterBillSchema)

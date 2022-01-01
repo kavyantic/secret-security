@@ -33,7 +33,7 @@
                                             <td class="username"><%=user.username%></td>
                                             <td class="password"><%=user.password%></td>
                                             <td class="email"><%=user.email%></td>
-                                            <td class="balance"><%=user.balance%></td>
+                                            <td class="balance"><%=user.balance%> ₹</td>
                                             <td class="phone"><%=user.phone%></td>
                                             <td class="info-button"><button type="button" class="btn btn-primary user-info" data-toggle="modal" data-target="#infoModal" 
                                                 info-url="/retailer/<%=user.username %>" >Info</button></td>
@@ -82,8 +82,9 @@
                                              <td><%=user.email%></td>
                                              <td><%=user.balance%></td>
                                               <td><%=user.phone%></td>
-                                             <td><button type="button" class="btn btn-primary">Info</button></td>
-                                         </tr>
+
+                                              <td class="info-button"><button type="button" class="btn btn-primary user-info" data-toggle="modal" data-target="#infoModal" 
+                                                info-url="/distributor/<%=user.username %>" >Info</button></td>                                         </tr>
                                          <% }) %>
                                  </tbody>
                              </table>
@@ -126,9 +127,9 @@
                                           <td><%=user.password%></td>
                                           <td><%=user.email%></td>
                                           <td><%=user.balance%></td>
-                                           <td><%=user.phone%></td>
-                                          <td><button type="button" class="btn btn-primary">Info</button></td>
-                                         </tr>
+                                            <td><%=user.phone%></td>
+                                           <td class="info-button"><button type="button" class="btn btn-primary user-info" data-toggle="modal" data-target="#infoModal" 
+                                            info-url="/superDistributor/<%=user.username %>" >Info</button></td>                                         </tr>
                                      <% }) %>
                                  </tbody>
                              </table>

@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+const AutoIncrement = require('mongoose-auto-increment');
 const validator = require('mongoose-validator')
 const uniqueValidator = require('mongoose-unique-validator');
 
 
 
-electricityBill = new mongoose.Schema({
-    _id:Number,
+electricityBillSchema = new mongoose.Schema({
     submittedBy:{
       type:mongoose.Schema.Types.ObjectId,
       ref:"Retailer"
@@ -43,14 +42,14 @@ electricityBill = new mongoose.Schema({
   
   })
 
-  electricityBill.plugin(AutoIncrement) 
+  electricityBillSchema.plugin(AutoIncrement.plugin,{model:'ElectricityBill',field:"id"}) 
   
 
 
 
 
   
-processingElectricityBill = new mongoose.Schema({
+processingElectricityBillSchema = new mongoose.Schema({
     _id:Number,
     submittedBy:{
         type:mongoose.Schema.Types.ObjectId,
@@ -94,7 +93,10 @@ processingElectricityBill = new mongoose.Schema({
   
   })
 
+  processingElectricityBillSchema.plugin(AutoIncrement.plugin,{model:'ProcessingElectricityBill',field:"batchId"}) 
 
-  mongoose.model('ElectricityBill',electricityBill)
-  mongoose.model('ProcessingElectricityBill',processingElectricityBill)
+
+
+  mongoose.model('ElectricityBill',electricityBillSchema)
+  mongoose.model('ProcessingElectricityBill',processingElectricityBillSchema)
   

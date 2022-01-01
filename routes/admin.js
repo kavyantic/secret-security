@@ -126,10 +126,6 @@ router.get('/members/info/:type/:user',(req,res)=>{
     }
   })
 }) 
-
-
-
-
 router.get('/members/register',(req,res)=>{
   Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
     info = {
@@ -140,28 +136,76 @@ router.get('/members/register',(req,res)=>{
 })
 router.get('/members/update/:type/:user',(req,res)=>{
   let user = req.params.user
-  let type = req.params.type.toLowerCase()
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
-    if(type==="retailer"){
-      res.send("done")
-    } else if(type==="distributor"){
-      Distributor
-    } else  if(type==="superdistributor"){
-      SuperDistributor
-    }
-    else {
-    }
-    info = {
-      user:foundAdmin
-    }
-   res.render('admin/updateMember',{info:info})
+  req.model.findOne({username:user},(err,foundMember)=>{
+    User.findOne({username:user},(err,foundAuth)=>{
+      info = {
+        userType:req.params.type,
+        userName:user,
+        user:req.user,
+        member:foundMember,
+        auth:foundAuth
+      }
+      res.render('admin/updateMember',{info:info})
+    })
   })
 })
+router.post('/members/update/:type/:user',(req,res)=>{
+  let user = req.params.user
+  req.model.updateOne({username:user},req.body,{new:true},(err,updatedMember)=>{
+    if(!err){
+      User.updateOne({username:user},req.body,{},(err,updateAuth)=>{
+        if(!err){
+          res.redirect('/admin/members/list')
+        } else {
+           console.log(err);
+        }
+      })
+    } else {
+      console.log(err);
+    }
+  })
+})
+router.get('/transactions',(req,res)=>{
+  Transaction.find({},(err,docs)=>{
+    var info = {
+      title:"Transactions",
+      transactions:docs
+    }
+    console.log(docs);
+    res.render('admin/transactions',{info:info})
+  })
+})
+
 
 
 // Posts //
 
 
+router.post('/transactions',(req,res)=>{
+  const {toDate,fromDate,toName,fromName} = req.body
+  query = {}
+  if(toDate||fromDate){
+    query.date= ""
+    toDate?query.date["$lte"] = new Date(req.body.toDate.split("-")).setHours(24):""
+    fromDate?query.date["$gte"] = new Date(req.body.fromDate.split("-")).setHours(0, 0, 0, 0):""
+  }
+  toName?query["to.name"] = toName:""
+  fromName?query["from.name"] = fromName: ""
+  console.log(query);
+  Transaction.find(query,
+    (err,docs)=>{
+    console.log(req.body);
+    var info = {
+      title:"Transactions",
+      transactions:docs,
+      toDate:toDate,
+      fromDate:fromDate,
+      toName:toName,
+      fromName:fromName
+    }
+    res.render('admin/transactions',{info:info})
+  })
+})
 
 router.post('/members/register/:type',(req,res)=>{
   let type = req.params.type.toLowerCase()
@@ -192,13 +236,40 @@ router.post('/members/register/:type',(req,res)=>{
 })
 
 router.post('/members/updateBalance/:type/:user',(req,res)=>{
-  amt = req.body.amount
-  req.model.updateOne({username:req.params.user},{"$inc":{"balance":amt}},{},(err,doc)=>{
+  let amt = req.body.amount
+  let pos_amt = Math.abs(amt)
+  req.model.findOneAndUpdate({username:req.params.user},{"$inc":{"balance":amt}},{},(err,doc)=>{
     if(!err){
       res.redirect('/admin/members/list')
-      transaction = new Transaction({
-        
+      if(amt>0){
+        transaction = new Transaction({
+         amount:pos_amt,
+         from:{
+           id:req.user._id,
+           name:req.user.username
+          },
+         to:{
+           id:doc._id,
+           name:doc.username
+         } 
+        })
+      } else {
+        transaction = new Transaction({
+          amount:pos_amt,
+          to:{  
+            id:req.user._id,
+            name:req.user.username
+           },
+          from:{
+            id:doc._id,
+            name:doc.username
+          } 
+         })
+      }
+      transaction.save((err,doc)=>{
+        console.log(err,doc);
       })
+     
     }
     else {
       res.status(400).send(err)
