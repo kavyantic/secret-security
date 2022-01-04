@@ -2,11 +2,14 @@
 
 
                     <h1 class="h3 mb-2 text-gray-800"><%=info.title%>  </h1>
+                 
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Bills</h6>
                         </div>
+                        
                         <div class="card-body">
+                           
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
@@ -21,9 +24,9 @@
                                             <th>Status</th>
                                             <th>Submitted At</th>
                                             <th>Submitted By</th>
-                                            <th>Action</th>
-
-
+                                            <!-- <th>Action</th> -->
+                                            <th style="display: none;">Status</th>
+                                            <th style="display: none;">RecieptNo</th>
                                         </tr>
                                     </thead>
                                     <!-- <tfoot>
@@ -39,7 +42,7 @@
                                     <tbody>
                                         <% info.bills.forEach(bill=>{%>
                                             <tr>
-                                                <td><%=bill._id %></td>
+                                                <td><%=bill.id %></td>
                                                 <td><%=bill.customerName%></td>
                                                 <td><%=bill.kno%></td>
                                                 <td><%=bill.state%></td>
@@ -48,10 +51,12 @@
                                                 <td>₹<%=bill.amount%></td>
                                                 <td><%=bill.status%></td>
                                                 <td><%=bill.submittedAt.toLocaleDateString()%></td>
-                                                <td><%=bill.submittedBy%></td>
-                                                <td><button type="button" class="btn btn-warning">Edit</button></td>
+                                                <td><%=bill.submittedByUsername%></td>
+                                                <!-- <td><button type="button" class="btn btn-warning">Edit</button></td> -->
+                                                <th style="display: none;">Status</th>
+                                                <th style="display: none;"></th>
                                             </tr>
-                                            <% }) %>
+                                         <% }) %>
                                     </tbody>
                                 </table>
                             </div>

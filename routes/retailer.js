@@ -45,12 +45,27 @@ router.get('/bills/:billType/submit',(req,res)=>{
 })
 
 router.get('/bills/electricity/new',(req,res)=>{
-  ElectricityBill.find({submittedBy:req.user_id},(err,foundBills)=>{
-    console.log(foundBills);
+  ElectricityBill.find({submittedBy:req.user._id},(err,bills)=>{ 
+    info = {
+      user:req.user,
+      bills:bills,
+      query:"electiricity",
+      title:"Electricity bills"
+    }
+   res.render('retailer/newBills',{info:info})
   })
 })
-router.get('/bills/electricity/processing')
-
+router.get('/bills/electricity/processing',(req,res)=>{
+  ProElecBill.find({submittedBy:req.user._id},(err,bills)=>{
+    info = {
+      user:req.user,
+      bills:bills,
+      query:"electricity",
+      title:"Electricity bills"
+    }
+   res.render('retailer/processingBills',{info:info})
+  }) 
+})
 router.post('/bills/electricity/submit',(req,res)=>{
   const {customerName,kno,state,department} = req.body
   fetch(format(apiURL,department,kno)) 
@@ -83,7 +98,7 @@ router.post('/bills/electricity/submit',(req,res)=>{
                 if(err){
                   console.log(err);
                 }else {
-                  res.send(savedCustomer)
+                  res.redirect('/retailer/bills/electricity/new')
                 }
             })
         }
