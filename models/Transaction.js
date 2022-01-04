@@ -6,6 +6,18 @@ const validator = require('mongoose-validator')
 
 
 const transactionSchema = new mongoose.Schema({
+    type:{
+
+    },
+    customerNo:{
+
+    },
+    receiptNo:{
+
+    },
+    narration:{
+
+    },
     amount:Number,
     date:{
         type:Date,

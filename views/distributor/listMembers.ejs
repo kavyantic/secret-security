@@ -1,6 +1,6 @@
 <%-include('partials/header') %>
     <!-- Page Heading -->
-                 <h1 class="h3 mb-2 text-gray-800"><%=info.memberType%></h1>
+                 <h1 class="h3 mb-2 text-gray-800">My retailers</h1>
                  <div class="card shadow mb-4">
                      <div class="card-header py-3">
                          <h6 class="m-0 font-weight-bold text-primary">Retailers Info</h6>
@@ -33,10 +33,10 @@
                                             <td class="username"><%=user.username%></td>
                                             <td class="password"><%=user.password%></td>
                                             <td class="email"><%=user.email%></td>
-                                            <td class="balance"><%=user.balance || "0"%> ₹</td>
+                                            <td class="balance"><%=user .balance || "0"%> ₹</td>
                                             <td class="phone"><%=user.phone%></td>
                                             <td class="info-button"><button type="button" class="btn btn-primary user-info" data-toggle="modal" data-target="#infoModal" 
-                                                info-url="/<%=user.accountType.toLowerCase()%>/<%=user.username %>" >Info</button></td>
+                                                info-url="" >Info</button></td>
                                          </tr>
                                      <% }) %>
                                  </tbody>

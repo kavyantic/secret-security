@@ -28,7 +28,6 @@ router.use((req,res,next)=>{
         res.redirect(`/login?msg=Please login again`)
       }
   }
-  
 })
 router.get('/dashboard',(req,res)=>{
      Retailer.findOne({username:req.user.username},(err,foundRetailer)=>{
@@ -48,9 +47,17 @@ router.get('/bills/:billType/submit',(req,res)=>{
         res.render('retailer/submitBill',{info:info})
     })
 })
+
+router.get('/bills/electricity/new',(req,res)=>{
+  ElectricityBill.find({submittedBy:req.user_id},(err,foundBills)=>{
+    console.log(foundBills);
+  })
+})
+router.get('/bills/electricity/processing')
+
 router.post('/bills/electricity/submit',(req,res)=>{
   const {customerName,kno,state,department} = req.body
-  fetch(format(apiURL,department,kno))
+  fetch(format(apiURL,department,kno)) 
   .then((apiResponse)=>apiResponse.text())
   .then(billInfo=>JSON.parse(billInfo))
   .then(billInfo=>{
@@ -73,9 +80,9 @@ router.post('/bills/electricity/submit',(req,res)=>{
         }
         else{
           console.log(savedCustomer);
-          Retailer.findByIdAndUpdate(req.user._id,
-            {"$push":{'billSubmitted':savedCustomer._id}},
-            { "new": true, "upsert": true },
+          Retailer.updateOne({_id:req.user._id},
+            {"$push":{'myBills.electricity':savedCustomer.id}},
+            {},
             (err,updatedRetailer)=>{
                 if(err){
                   console.log(err);
@@ -134,44 +141,4 @@ router.post('/bills/water/submit',(req,res)=>{
  
 })
       
-
-// app.get('/dashboard/retailer/bills/list',(req,res)=>{
-//         if(req.isAuthenticated()){
-//           RetailerInfo.findOne({username:req.user.username},(err,foundRetailer)=>{
-//             if(err || !foundRetailer){
-//               res.redirect('/login',{msg:err})
-//             }
-//             else {
-//               bills = foundRetailer.billSubmitted
-//               CustomerInfo.find({serial:{$in:bills}},(err,allBillsInfo)=>{
-//                 console.log(allBillsInfo);
-//                 if(!err && allBillsInfo){
-//                 ProcessingCustomerInfo.find({serial:{$in:bills}},(err,allProcessingBillsInfo)=>{
-//                   console.log(allProcessingBillsInfo);
-//                     if(!err && allProcessingBillsInfo){
-//                       res.render('retailer/my-bills',{bills:allBillsInfo})
-//                     } else {
-//                       res.render('retailer/my-bills',{bills:allBillsInfo})
-//                     }
-//                 })
-
-//                 }
-//                 else {
-//                   res.sendStatus(400)
-//                 }
-
-//               })
-//             }
-//           })
-//         }
-//         else {
-//           res.redirect('/login')
-      
-//         }
-//       })
-
-
-
-
-
 module.exports = router

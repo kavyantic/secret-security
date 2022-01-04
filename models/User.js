@@ -3,29 +3,93 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 const passportLocalMongoose = require('passport-local-mongoose');
 const validator = require('mongoose-validator')
 
+// userSchema = new mongoose.Schema({
+//     username:{
+//       type:String,
+//       unique:true
+//      },
+      
+//     accountType:{
+//         type:String,
+//         required:true,
+//         enum:["admin","superdistributor","distributor","retailer"]
+//     },
+//     // accountType:{
+//     //   type:mongoose.Schema.Types.ObjectId,
+//     //   refPath:"refModel"
+//     // },
+//     // refModel:{
+//     //   type:String,
+//     //   enum:["Admin","SuperDistributor","Distributor","Retailer"]
+//     // },
+    
+//     password: {
+//       type: String,
+//       minlength: 4,
+//       maxlength: 16,
+//       trim: true,
+//     },
+//     canSetServiceTime:{type:Boolean,default:false},
+//     canViewReport:{type:Boolean,default:false},
+//     canRegisterAccount:{type:Boolean,default:false},
+//     canUploadBills:{type:Boolean,default:true},
+//     canAddMoney:{type:Boolean,default:true},
+//     canDeductMoney:{type:Boolean,default:true}
+//   })
+
+
 userSchema = new mongoose.Schema({
     username:{
       type:String,
       unique:true
      },
-      
     accountType:{
         type:String,
         required:true,
         enum:["admin","superdistributor","distributor","retailer"]
     },
-    accountRef:{
-      type:mongoose.Schema.Types.ObjectId
-    },
-    // _admin:{type: mongoose.Schema.Types.ObjectId,ref: },
-    // _superDistributor:{},
-    // _distributor:{},
-    // _retailer:{},
     password: {
       type: String,
       minlength: 4,
       maxlength: 16,
       trim: true,
+    },
+    name:{
+      type:String
+    },
+    date:{
+      type:Date,
+      default:Date.now
+    },
+    address:String,
+    email:{
+      type: String,
+      lowercase: true,
+      // require:[true,"Please enter your email"],
+      // unique:[true,"A distributor with this email already exists"],
+      trim: true,
+      validate: [
+        validator({
+          validator: 'isEmail',
+          message: 'Oops..please enter valid email'
+        })
+      ],
+    },
+    phone:{
+      type:String,
+      // unique:true,
+      // $regex: '^[6-9]\d{9}$' 
+  
+    },
+    balance:Number,
+    myMembers:{
+      superDistributor:[],  
+      distributor:[],
+      retailer:[]
+    },
+    myBills:{
+      electricity:[],
+      water:[]
     },
     canSetServiceTime:{type:Boolean,default:true},
     canViewReport:{type:Boolean,default:true},
@@ -33,9 +97,7 @@ userSchema = new mongoose.Schema({
     canUploadBills:{type:Boolean,default:true},
     canAddMoney:{type:Boolean,default:true},
   })
-  // userSchema.plugin(passportLocalMongoose)
   
-
 userSchema.methods.verifyPassword = (password)=>{
   return true
 }

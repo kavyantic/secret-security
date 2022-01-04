@@ -5,7 +5,10 @@
 .custom-select::after {
   content: none;
 }
-
+.hide {
+  display:none;
+  transition: 1s;
+}
 table {
   /* font-size: 0.1em; */
   
@@ -16,6 +19,9 @@ table {
 .horizontal-aligner{
   display: inline-block;
   margin:3%;
+}
+hr {
+  margin:5%;
 }
 /* a {
   text-decoration: none;
@@ -33,6 +39,9 @@ span{
 } */
 #Balance {
   color:rgb(rgb(255, 255, 255), green, blue);
+}
+#collapseOne{
+  max-width: 100%;
 }
 
 button.dt-button.buttons-html5 {
@@ -57,3 +66,18 @@ button.dt-button.buttons-html5 {
 /* #upload-bill-form label{
   color:blue;
 } */
+
+
+
+
+.PROCESSING {
+  color:yellow;
+}
+
+.SUCCESSFULL {
+  color:rgb(31, 182, 31)
+}
+
+.FAILD {
+  color:red;
+}

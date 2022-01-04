@@ -9,18 +9,18 @@ const InfoSchema = require('./Info')
 distributorSchema = new mongoose.Schema({
   ...InfoSchema
 ,
-sponseredBy:{
+parent:{
   type:mongoose.Schema.Types.ObjectId,
   refPath:'sponseredModel'
 },
-sponseredModel:{
+parentModel:{
   type:String,
   enum:['Admin',"SuperDistributor"]
 }
 ,
-  sponseredByName:{
-    type:String 
-  }, 
+parentName:{
+  type:String 
+}, 
   
     active:Boolean,
     balance:{

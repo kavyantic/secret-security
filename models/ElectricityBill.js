@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-auto-increment');
 const validator = require('mongoose-validator')
-const uniqueValidator = require('mongoose-unique-validator');
 
 
 
@@ -42,23 +41,23 @@ electricityBillSchema = new mongoose.Schema({
   
   })
 
-  electricityBillSchema.plugin(AutoIncrement.plugin,{model:'ElectricityBill',field:"id"}) 
+electricityBillSchema.plugin(AutoIncrement.plugin,{model:'ElectricityBill',field:"id"}) 
   
 
 
 
 
-  
+   
 processingElectricityBillSchema = new mongoose.Schema({
-    _id:Number,
+  id:Number,
     submittedBy:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Retailer"
       },
-      submittedByUsername:{
+      submittedByName:{
           type:String
       },
-    batchId:Number,
+    // batchId:{type:Number,default:1},
     batchDate:{
         type:Date,
         default:Date.now
@@ -81,19 +80,18 @@ processingElectricityBillSchema = new mongoose.Schema({
     },
     department:{
       type:String,
-      required:true
     },
     billDueDate:{
       type:String
     },
-    paymentId:{
+    receiptNo:{
         type:String
     },
     amount:String
   
   })
 
-  processingElectricityBillSchema.plugin(AutoIncrement.plugin,{model:'ProcessingElectricityBill',field:"batchId"}) 
+  // processingElectricityBillSchema.plugin(AutoIncrement.plugin,{model:'ProcessingElectricityBill',field:"batchId"}) 
 
 
 

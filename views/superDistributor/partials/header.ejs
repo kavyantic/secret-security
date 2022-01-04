@@ -10,18 +10,15 @@
     <meta name="author" content="">
 
     <title></title>
-
-    <!-- Custom fonts for this template-->
     <link
     href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
     rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
-    <!-- Custom styles for this template-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin/5.1.1/css/sb-admin.min.css" integrity="sha512-MMPoraQHjUkh3iTYGMIvYskg+UiP4MqZ9vu3Ui/u8OT8qn43cSR5J8lOb5Rr61ede0tEZLt/+JkMohB0JQswfQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.11.3/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" integrity="sha512-Mk4n0eeNdGiUHlWvZRybiowkcu+Fo2t4XwsJyyDghASMeFGH6yUXcdDI3CKq12an5J8fq4EFzRVRdbjerO3RmQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body id="page-top">
@@ -37,7 +34,7 @@
                 <div class="sidebar-brand-icon ">
                     <i class="fas fa-users-cog"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Admin</div>
+                <div class="sidebar-brand-text mx-3">Mega Distributor</div>
             </a>
         
             <!-- Divider -->
@@ -45,7 +42,7 @@
         
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="/superdistributor/dashboard">
+                <a class="nav-link" href="/admin/dashboard">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -60,24 +57,34 @@
         
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/dashboard/admin/members/" data-toggle="collapse" data-target="#collapseTwo"
+                <a class="nav-link collapsed" href="/dashboard/admin/members/" data-toggle="collapse" data-target="#membersDropdown"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-user-friends"></i>
                     <span>Members</span>
                 </a>
+                <div id="membersDropdown" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="/superdistributor/members/list/retailer">Retailers</a>
+                        <a class="collapse-item" href="/superdistributor/members/list/distributor">Distributor</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/dashboard/admin/members/" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-user-friends"></i>
+                    <span>New member</span>
+                </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">dropdown</h6>
-                        <a class="collapse-item" href="/superdistributor/members/list">Members</a>
                         <a class="collapse-item" href="/superdistributor/members/register">New member</a>
-        
                     </div>
                 </div>
             </li>
         
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/admin/bills/electricity/new" data-toggle="collapse" data-target="#electricBills"
+                <a class="nav-link collapsed" href="/superDistributor/bills/electricity/new" data-toggle="collapse" data-target="#electricBills"
                     aria-expanded="true" aria-controls="electricBills">
                     <i class="fas fa-cog"></i>
                     <span>Electricity bills</span>
@@ -86,8 +93,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="/admin/bills/electricity/new">New Bills</a>
-                        <a class="collapse-item" href="/admin/bills/electricity/processing/">Processing Bills</a>
+                        <a class="collapse-item" href="/superdistributor/bills/electricity/new">New Bills</a>
+                        <a class="collapse-item" href="/superdistributor/bills/electricity/processing/">Processing Bills</a>
         
                     </div>
                 </div>
@@ -104,7 +111,6 @@
                         <h6 class="collapse-header">Custom Utilities:</h6>
                         <a class="collapse-item" href="/admin/bills/water/new">New Bills</a>
                         <a class="collapse-item" href="/admin/bills/water/processing">Processing Bills</a>
-        
                     </div>
                 </div>
             </li>
@@ -112,18 +118,18 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
                     aria-expanded="true" aria-controls="collapseThree">
                     <i class="fas fa-wallet"></i>
-                    <span>wallet</span>
+                    <span>Transactions</span>
                 </a>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">dropdown</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="/superdistributor/transactions">Transations</a>
                     </div>
                 </div>
             </li>
             
             <li class="nav-item">
+                
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
                     aria-expanded="true" aria-controls="collapseFour">
                     <i class="fas fa-file-invoice-dollar"></i>
@@ -132,8 +138,7 @@
                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">dropdown</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
@@ -146,8 +151,7 @@
                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">dropdown</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
@@ -160,22 +164,18 @@
                 <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">dropdown</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
             
         
-            <!-- Divider -->
             <hr class="sidebar-divider">
         
-            <!-- Heading -->
             <div class="sidebar-heading">
                 Payments
             </div>
         
-            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdhar"
                     aria-expanded="true" aria-controls="collapseAdhar">
@@ -184,10 +184,12 @@
                 </a>
                 <div id="collapseAdhar" class="collapse" aria-labelledby="headingAdhar" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
+            
+            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBalance"
                     aria-expanded="true" aria-controls="collapseBalance">
@@ -196,7 +198,7 @@
                 </a>
                 <div id="collapseBalance" class="collapse" aria-labelledby="headingBalance" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
@@ -208,7 +210,7 @@
                 </a>
                 <div id="collapseSmt" class="collapse" aria-labelledby="headingSmt" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
@@ -220,7 +222,7 @@
                 </a>
                 <div id="collapseAtm" class="collapse" aria-labelledby="headingAtm" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
@@ -234,7 +236,7 @@
                 </a>
                 <div id="collapseSupport" class="collapse" aria-labelledby="headingSupport" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
+                        <a class="collapse-item" href="#">Coming Soon</a>
                     </div>
                 </div>
             </li>
@@ -360,14 +362,12 @@
                         </li>
                 
                         <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <!-- <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
                                 <span class="badge badge-danger badge-counter">7</span>
                             </a>
-                            <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
@@ -423,17 +423,15 @@
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
-                        </li>
+                        </li> -->
                 
                         <div class="topbar-divider d-none d-sm-block"></div>
                 
-                        <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><%=user.username%> </span>
+                                <!-- <img class="img-profile rounded-circle"> -->
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

@@ -11,12 +11,13 @@ const res = require('express/lib/response');
 const format = require('string-format')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const autoIncrement = require('mongoose-auto-increment');
+const fileUpload = require('express-fileupload');
 
 var isProduction = process.env.NODE_ENV === 'production';
 
 dbUrl = isProduction?process.env.DB_URL:process.env.LOCAL_DB_URL
 
-mongoose.connect(process.env.LOCAL_DB_URL || "mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true})
+mongoose.connect( "mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true})
 mongoose.set('useCreateIndex',true)
 autoIncrement.initialize(mongoose);
 
@@ -34,6 +35,11 @@ require('./models/Transaction')
 
 
 const app = express()
+app.use(fileUpload({
+  createParentPath: true
+}));
+
+app.use(express.json())
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(express.static('public'));
 app.use(session({
@@ -49,14 +55,11 @@ require('./config/passport');
 
 // admin = {
 //   username:"admin"
-//   ,password:"painter"
+//   ,password:"123456"
 //   ,accountType:"admin"
 // }
 // User = mongoose.model('User')
-// Admin = mongoose.model('Admin')
-
 // a  = new User(admin).save()
-// b = new Admin(admin).save()
 
 PORT = process.env.PORT||3000
 app.listen(PORT,function(){

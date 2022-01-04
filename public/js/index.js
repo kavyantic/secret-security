@@ -24,8 +24,10 @@ var ExcelToJSON = function(file,call) {
       var workbook = XLSX.read(data, {
         type: 'binary'
       });
+      console.log(workbook);
         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
         var json_object = (XL_row_object);
+        console.log(json_object);
         call(XL_row_object)
     };
     reader.onerror = function(ex) {

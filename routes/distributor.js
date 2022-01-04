@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { query } = require('express');
 const mongoose = require('mongoose');
 
 const User = mongoose.model('User')
@@ -11,16 +10,19 @@ const ElectricityBill = mongoose.model('ElectricityBill')
 const ProElecBill = mongoose.model('ProcessingElectricityBill')
 const WaterBill = mongoose.model('WaterBill')
 const ProWaterBill = mongoose.model('ProcessingWaterBill')
+const Transaction = mongoose.model('Transaction')
+const xlsx = require('node-xlsx')
+// const xlsx = require('xlsx')
 
-// const Transaction = mongoose.model('Transaction')
-const passport = require('passport');
+
 
 // router.param('type',(req,res,next,type)=>{
-//   if(type.toLowerCase()==="retailer"){
+//   type = type.toLowerCase()
+//   if(type==="retailer"){
 //     req.model = Retailer
-//   } else if(type.toLowerCase()==="distributor"){
+//   } else if(type==="distributor"){
 //     req.model = Distributor
-//   } else  if(type.toLowerCase()==="superdistributor"){
+//   } else  if(type==="superdistributor"){
 //     req.model = SuperDistributor
 //   }
 //   else {
@@ -29,14 +31,13 @@ const passport = require('passport');
 //   return next()
 // })
 router.use((req,res,next)=>{
-  if(req.isAuthenticated() && req.user.accountType==="admin"){
+  
+  if((req.isAuthenticated() && req.user.accountType==="distributor")){
       return next()
   } else {
-    console.log(req.method);
       if(req.method==="GET"){
-      if(!(req.user.accountType ==="admin")){res.redirect(`/login?msg=You are not an Admin&red=admin/${req.url}`)}
-        res.redirect(`/login?msg=Please login again&red=admin/${req.url}`)
-      }
+        res.redirect(`/login?msg=Please login again&red=distributor/${req.url}`)
+      } 
       else {
         res.redirect(`/login?msg=Please login again`)
       }
@@ -44,149 +45,295 @@ router.use((req,res,next)=>{
   
 })
 router.get('/dashboard',(req,res)=>{
-     Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
        info = {
-         user:foundAdmin
+         user:req.user
        }
-      res.render('admin/dashboard',{info:info})
-     })
-})
+      res.render('distributor/dashboard',{info:info})
+ })
 router.get('/bills/electricity/new',(req,res)=>{
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
     ElectricityBill.find({},(err,bills)=>{ 
       info = {
-        user:foundAdmin,
+        user:req.user,
         bills:bills,
         query:"electiricity",
         title:"Electricity bills"
       }
      res.render('admin/newBills',{info:info})
     })
-  })
 })
 router.get('/bills/electricity/processing/',(req,res)=>{
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
     ProElecBill.find({},(err,bills)=>{
       info = {
-        user:foundAdmin,
+        user:req.user,
         bills:bills,
         query:"electricity",
         title:"Electricity bills"
       }
      res.render('admin/processingBills',{info:info})
     })
-   })
 })
 router.get('/bills/water/new',(req,res)=>{
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
     WaterBill.find({},(err,bills)=>{ 
       info = {
-        user:foundAdmin,
+        user:req.user,
         bills:bills,
         query:"water",
         title:"Water bills"
       }
      res.render('admin/newBills',{info:info})
-    })
   })
 })
 router.get('/bills/water/processing',(req,res)=>{
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
     ProWaterBill.find({},(err,bills)=>{
       info = {
-        user:foundAdmin,
+        user:req.user,
         bills:bills,
         query:"water",
         title:"Water bills"
       }
      res.render('admin/processingBills',{info:info})
     })
-   })
 })
-router.get('/members/list',(req,res)=>{
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
-    Promise.all([
-      Retailer.find(),
-      Distributor.find(),
-      SuperDistributor.find()
-    ]).then((result)=>{
+router.get('/members/list/',(req,res)=>{
+   User.find({_id:{$in:req.user.myMembers.retailer}}).then((result)=>{
       info = {
-        user:foundAdmin,
-        retailers:result[0],
-        distributors:result[1],
-        superDistributor:result[2]
+        user:req.user,
+        members:result
       }
-     res.render('admin/listMembers',{info:info})
-    })
+     res.render('distributor/listMembers',{info:info})
   })
 })
+router.get('/members/info/:type/:user',(req,res)=>{
+  req.model.findOne({username:req.params.user},(err,foundUser)=>{
+    if(!err){
+      res.send(foundUser)
+    } else {
+      res.send(err)
+    }
+  })
+}) 
 router.get('/members/register',(req,res)=>{
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
     info = {
-      user:foundAdmin
+      user:req.user,
     }
-   res.render('admin/registerMember',{info:info})
-  })
+   res.render('distributor/registerMember',{info:info})
 })
-router.get('/members/update/:type/:user',(req,res)=>{ 
+router.get('/members/update/:type/:user',(req,res)=>{
   let user = req.params.user
-  let type = req.params.type.toLowerCase()
-  Admin.findOne({username:req.user.username},(err,foundAdmin)=>{
-    if(type==="retailer"){
-      Retailer
-    } else if(type==="distributor"){
-      Distributor
-    } else  if(type==="superdistributor"){
-      SuperDistributor
+  let type = req.params.type
+  User.findOne({username:user},(err,foundMember)=>{
+      info = {
+        userType:type,
+        userName:user,
+        user:req.user,
+        auth:foundMember,
+      }
+      res.render('admin/updateMember',{info:info})
+    })
+})
+
+router.get('/transactions',(req,res)=>{
+  Transaction.find({},(err,docs)=>{
+    var info = {
+      title:"Transactions",
+      transactions:docs
     }
-    else {
-    }
-    info = {
-      user:foundAdmin
-    }
-   res.render('admin/updateMember',{info:info})
+    console.log(docs);
+    res.render('admin/transactions',{info:info})
   })
 })
+
 
 
 // Posts //
-
-
-
-router.post('/members/register/:type',(req,res)=>{
-  let type = req.params.type.toLowerCase()
-  let data = req.body
-  console.log(data);
-  data.sponseredBy = "Admin"
-  if(type==="retailer"){
-    model = new Retailer(req.body)
-  } else if(type==="distributor"){
-    model = new Distributor(req.body)
-  } else  if(type==="superdistributor"){
-    model = new SuperDistributor(req.body)
-  }
-  else {
-    res.status(401).send({err:"Invalid Type of User"})
-  }
-  user = new User({
-    accountType:type,
-    username:req.body.username,
-    password:req.body.password
-  })
-  user.save((err,doc)=>{
-    if(!err){
-      model.save((err)=>{
+router.post('/members/update/:type/:user',(req,res)=>{
+  let user = req.params.user
+  let data = req.body 
+  let type = req.params.type
+  data.canSetServiceTime = data.canSetServiceTime?true:false
+  data.canViewReport = data.canViewReport?true:false
+  data.canRegisterAccount = data.canRegisterAccount?true:false
+  data.canUploadBills = data.canUploadBills?true:false
+  data.canAddMoney = data.canAddMoney?true:false
+  data.canDeductMoney = data.canDeductMoney?true:false
+  User.updateOne({username:user},data,{},(err,updatedUser)=>{
         if(!err){
-          res.status(200).send({msg:"Successfull"})
+          res.redirect('/admin/members/list/'+type)
         } else {
-          res.status(400).send({err:err})
+           console.log(err);
         }
       })
-    } else{
-      console.log(err);
-      res.status(400).send({err:"Username already in use"})
+})
+
+router.post('/transactions',(req,res)=>{
+  const {toDate,fromDate,toName,fromName,type} = req.body
+  query = {}
+  if(toDate || fromDate){
+    query.date= {}
+    toDate?query.date["$lte"] = new Date(req.body.toDate.split("-")).setHours(24):""
+    fromDate?query.date["$gte"] = new Date(req.body.fromDate.split("-")).setHours(0, 0, 0, 0):""
+  }
+  toName?query["to.name"] = toName:""
+  fromName?query["from.name"] = fromName: ""
+  console.log(query);
+  Transaction.find(query,
+    (err,docs)=>{
+    var info = {
+      title:"Transactions",
+      transactions:docs,
+      toDate:toDate,
+      fromDate:fromDate,
+      toName:toName,
+      fromName:fromName
+    }
+    res.render('admin/transactions',{info:info})
+  })
+})
+
+router.post('/members/register/',(req,res)=>{
+  let data = req.body
+  data.accountType = 'retailer'
+  data.canSetServiceTime = data.canSetServiceTime?true:false
+  data.canViewReport = data.canViewReport?true:false
+  data.canRegisterAccount = data.canRegisterAccount?true:false
+  data.canUploadBills = data.canUploadBills?true:false
+  data.canAddMoney = data.canAddMoney?true:false
+  data.canDeductMoney = data.canDeductMoney?true:false
+  console.log(data);
+  
+  user = new User(data)
+  user.save((err,savedRetailer)=>{
+        if(!err){
+          User.updateOne({_id:req.user._id},{$push:{'myMembers.retailer':savedRetailer._id}},{},(err)=>{
+            if(!err){
+              res.status(200).send({msg:"Successfull"})
+
+            } else {
+              res.send(err)
+            }
+          })
+          // req.user.myMembers.retailer.push(savedRetailer._id)
+        } else {
+          res.status(400).send(err)
+        }
+      })
+})
+
+router.post('/members/updateBalance/:type/:user',(req,res)=>{
+  let amt = req.body.amount
+  let type = req.params.type
+  let pos_amt = Math.abs(amt)
+  User.findOneAndUpdate({username:req.params.user},{"$inc":{"balance":amt}},{},(err,doc)=>{
+    if(!err){
+      res.redirect('/admin/members/list')
+      if(amt>0){
+        transaction = new Transaction({
+         amount:pos_amt,
+         from:{
+           id:req.user._id,
+           name:req.user.username
+          },
+         to:{
+           id:doc._id,
+           name:doc.username
+         } 
+        })
+      } else {
+        transaction = new Transaction({
+          amount:pos_amt,
+          to:{  
+            id:req.user._id,
+            name:req.user.username
+           },
+          from:{
+            id:doc._id,
+            name:doc.username
+          } 
+         })
+      }
+      transaction.save((err,doc)=>{
+        console.log(err,doc);
+      })
+     
+    }
+    else {
+      res.status(400).send(err)
     }
   })
- 
 })
+
+
+router.get('/createBatch/electricity',(req,res)=>{
+  ElectricityBill.find({},(err,bills)=>{
+   procBills = bills.map((e)=>{
+      return {
+        submittedBy : e.submittedBy,
+        submittedByName : e.submittedByName,
+        customerName : e.customerName,
+        submittedAt : e.submittedAt,
+        kno : e.kno,
+        state:e.state,
+        department:e.department,
+        billDueDate:e.billDueDate,
+        amount:e.amount,
+        id:e.id
+      }
+    })
+    ProElecBill.insertMany(procBills,(err,newBills)=>{
+        if(!err){
+          ElectricityBill.deleteMany({},(err)=>{
+            if(err){
+              res.send(newBills)
+            } else {
+              res.send(err)
+            }
+          })
+        } else {
+          res.send(err)
+        }
+    })
+  })
+})
+
+
+router.post('/bills/electricity/uploadStatus',(req,res)=>{
+  let a = xlsx.parse(req.files.file.data)
+  let data = a[0].data
+  let arr = []
+  data.map((e,i)=>{
+    obj =   {}
+    if(!(i<=1)){
+      obj.id = e[0]
+      obj.status = e[6]
+      obj.receiptNo = e[7]
+      if(obj.id){
+        ProElecBill.updateOne({id:obj.id},{status:obj.status,receiptNo:obj.receiptNo},{},(err,doc)=>{
+          if(!err){
+            console.log(err);
+          }
+        })
+      }
+      arr.push(obj)
+    }
+  })
+  res.redirect('/admin/bills/electricity/processing/')
+
+    // let wb= xlsx.read(req.files.file.data);
+  // let ws = wb.Sheets[wb.SheetNames[0]];
+  // let data = xlsx.utils.sheet_to_json(ws);
+  // for(d in data){
+  //   console.log(data[d]);
+  // }
+
+})
+
+module.exports = router
+
+
+
+
+
+
+
+
 
