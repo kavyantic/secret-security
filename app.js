@@ -17,7 +17,7 @@ var isProduction = process.env.NODE_ENV === 'production';
 
 dbUrl = isProduction?process.env.DB_URL:process.env.LOCAL_DB_URL
 
-mongoose.connect( "mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true})
+mongoose.connect(process.env.LOCAL_DB_URL || "mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true})
 mongoose.set('useCreateIndex',true)
 autoIncrement.initialize(mongoose);
 
@@ -59,6 +59,7 @@ require('./config/passport');
 //   ,accountType:"admin"
 // }
 // User = mongoose.model('User')
+
 // a  = new User(admin).save()
 
 PORT = process.env.PORT||3000

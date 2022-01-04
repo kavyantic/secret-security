@@ -81,15 +81,27 @@ userSchema = new mongoose.Schema({
       // $regex: '^[6-9]\d{9}$' 
   
     },
-    balance:Number,
-    myMembers:{
-      superDistributor:[],  
-      distributor:[],
-      retailer:[]
+    mySponser:{
+      name:{type:String},
+      id:{
+        type:mongoose.Schema.Types.ObjectId,
+        refPath:"refModel"
+      }
     },
+    balance:Number,
+    myRetailers:[
+      {type:mongoose.Schema.Types.ObjectId,ref:"Retailers"}
+    ],
+    myDistributor:[
+      {type:mongoose.Schema.Types.ObjectId,ref:"Distributor"}
+    ],
     myBills:{
       electricity:[],
       water:[]
+    },
+    refModel:{
+      type:String,
+      enum:['Admin',"SuperDistributor","Distributor"]
     },
     canSetServiceTime:{type:Boolean,default:true},
     canViewReport:{type:Boolean,default:true},

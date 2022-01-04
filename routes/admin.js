@@ -96,6 +96,7 @@ router.get('/bills/water/processing',(req,res)=>{
 router.get('/members/list/:accountType',(req,res)=>{
    User.find({accountType:req.params.accountType}).then((result)=>{
       info = {
+        accountType:req.params.accountType,
         user:req.user,
         members:result
       }
@@ -200,11 +201,48 @@ router.post('/members/register/:type',(req,res)=>{
   data.canAddMoney = data.canAddMoney?true:false
   data.canDeductMoney = data.canDeductMoney?true:false
   console.log(data);
-  req.body.parent = req.user._id
+  let childArr
+  if(data.parent){
+    if(type=='retailer'){
+      Distributor.findOne({username:data.parent},(err,dist)=>{
+        if(!err && dist){
+          data.mySponser = {
+            id:dist._id,
+            name:dist.username
+          } 
+          childArr = dist.myRetailers
+        } else {
+          return res.send(err || "No distributor with this username")
+        }
+      })
+    }
+    else if(type=='distributor'){
+      SuperDistributor.findOne({username:data.parent},(err,dist)=>{
+        if(!err && dist){
+          data.mySponser = {
+            id:dist._id,
+            name:dist.username
+          } 
+          childArr = dist.myDistributors
+        } else {
+          return res.send(err || "No Super Distributor with this username")
+        }
+      })
+    }
+  } else {
+    console.log("no parent");
+  }
   user = new User(data)
-  user.save((err)=>{
+  user.save((err,savedUser)=>{
         if(!err){
-          res.status(200).send({msg:"Successfull"})
+          childArr.push(savedUser._id)
+          childArr.save((err)=>{
+              if(!err){
+                res.status(200).send({msg:"Successfull"})
+              } else {
+                res.status(400).send(err)
+              }
+          })
         } else {
           res.status(400).send(err)
         }
