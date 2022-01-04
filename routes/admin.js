@@ -11,6 +11,8 @@ const ProElecBill = mongoose.model('ProcessingElectricityBill')
 const WaterBill = mongoose.model('WaterBill')
 const ProWaterBill = mongoose.model('ProcessingWaterBill')
 const Transaction = mongoose.model('Transaction')
+const BatchElectricity =   mongoose.model('BatchElectricity')
+
 const xlsx = require('node-xlsx')
 // const xlsx = require('xlsx')
 
@@ -61,15 +63,21 @@ router.get('/bills/electricity/new',(req,res)=>{
     })
 })
 router.get('/bills/electricity/processing/',(req,res)=>{
-    ProElecBill.find({},(err,bills)=>{
-      info = {
-        user:req.user,
-        bills:bills,
-        query:"electricity",
-        title:"Electricity bills"
-      }
-     res.render('admin/processingBills',{info:info})
-    })
+  req.query.count
+  BatchElectricity.nextCount((err,count)=>{
+    BatchElectricity.findOne({id:count-1},(err,batch)=>{
+      ProElecBill.find({id:{$in:batch.bills}},(err,bills)=>{
+        info = {
+          batchCount:count-1,
+          user:req.user,
+          bills:bills,
+          query:"electricity",
+          title:"Electricity bills"
+        }
+       res.render('admin/processingBills',{info:info})
+      })   
+     })
+  })
 })
 router.get('/bills/water/new',(req,res)=>{
     WaterBill.find({},(err,bills)=>{ 
@@ -146,6 +154,36 @@ router.get('/transactions',(req,res)=>{
 
 
 // Posts //
+router.post('/bills/electricity/processing/',(req,res)=>{
+    batchId = req.body.batchId
+    if(batchId){
+      BatchElectricity.findOne({id:batchId},(err,batch)=>{
+        ProElecBill.find({id:{$in:batch.bills}},(err,bills)=>{
+          info = {
+            batchCount:batchId,
+            user:req.user,
+            bills:bills,
+            query:"electricity",
+            title:"Electricity bills"
+          }
+         res.render('admin/processingBills',{info:info})
+        })   
+       })
+    } else {
+
+      ProElecBill.find({},(err,bills)=>{
+        info = {
+          batchCount:batchId,
+          user:req.user,
+          bills:bills,
+          query:"electricity",
+          title:"Electricity bills"
+        }
+       res.render('admin/processingBills',{info:info})
+      })
+    }
+    
+})
 router.post('/members/update/:type/:user',(req,res)=>{
   let user = req.params.user
   let data = req.body 
@@ -164,7 +202,6 @@ router.post('/members/update/:type/:user',(req,res)=>{
         }
       })
 })
-
 router.post('/transactions',(req,res)=>{
   const {toDate,fromDate,toName,fromName,type} = req.body
   query = {}
@@ -189,7 +226,6 @@ router.post('/transactions',(req,res)=>{
     res.render('admin/transactions',{info:info})
   })
 })
-
 router.post('/members/register/:type',(req,res)=>{
   let type = req.params.type.toLowerCase()  
   let data = req.body
@@ -200,62 +236,22 @@ router.post('/members/register/:type',(req,res)=>{
   data.canUploadBills = data.canUploadBills?true:false
   data.canAddMoney = data.canAddMoney?true:false
   data.canDeductMoney = data.canDeductMoney?true:false
-  console.log(data);
-  let childArr
-  if(data.parent){
-    if(type=='retailer'){
-      Distributor.findOne({username:data.parent},(err,dist)=>{
-        if(!err && dist){
-          data.mySponser = {
-            id:dist._id,
-            name:dist.username
-          } 
-          childArr = dist.myRetailers
-        } else {
-          return res.send(err || "No distributor with this username")
-        }
-      })
-    }
-    else if(type=='distributor'){
-      SuperDistributor.findOne({username:data.parent},(err,dist)=>{
-        if(!err && dist){
-          data.mySponser = {
-            id:dist._id,
-            name:dist.username
-          } 
-          childArr = dist.myDistributors
-        } else {
-          return res.send(err || "No Super Distributor with this username")
-        }
-      })
-    }
-  } else {
-    console.log("no parent");
-  }
   user = new User(data)
-  user.save((err,savedUser)=>{
+  user.save((err)=>{
         if(!err){
-          childArr.push(savedUser._id)
-          childArr.save((err)=>{
-              if(!err){
-                res.status(200).send({msg:"Successfull"})
-              } else {
-                res.status(400).send(err)
-              }
-          })
+          res.redirect('/admin/members/list/'+type)
         } else {
           res.status(400).send(err)
         }
       })
 })
-
 router.post('/members/updateBalance/:type/:user',(req,res)=>{
   let amt = req.body.amount
   let type = req.params.type
   let pos_amt = Math.abs(amt)
   User.findOneAndUpdate({username:req.params.user},{"$inc":{"balance":amt}},{},(err,doc)=>{
     if(!err){
-      res.redirect('/admin/members/list/'+type)
+      res.redirect('/admin/members/list'+type)
       if(amt>0){
         transaction = new Transaction({
          amount:pos_amt,
@@ -291,11 +287,13 @@ router.post('/members/updateBalance/:type/:user',(req,res)=>{
     }
   })
 })
-
-
 router.get('/createBatch/electricity',(req,res)=>{
+  var name = req.body.name
+  var batch = []
+  
   ElectricityBill.find({},(err,bills)=>{
    procBills = bills.map((e)=>{
+      batch.push(e.id)
       return {
         submittedBy : e.submittedBy,
         submittedByName : e.submittedByName,
@@ -309,11 +307,20 @@ router.get('/createBatch/electricity',(req,res)=>{
         id:e.id
       }
     })
+    console.log(batch);
+    batch = new BatchElectricity({
+      name:name,
+      bills:batch
+    })
     ProElecBill.insertMany(procBills,(err,newBills)=>{
         if(!err){
           ElectricityBill.deleteMany({},(err)=>{
-            if(err){
-              res.send(newBills)
+            if(!err){
+              batch.save(err=>{
+                if(!err){
+                  res.redirect('/admin/bills/electricity/processing/')
+                }
+              })
             } else {
               res.send(err)
             }
@@ -324,8 +331,6 @@ router.get('/createBatch/electricity',(req,res)=>{
     })
   })
 })
-
-
 router.post('/bills/electricity/uploadStatus',(req,res)=>{
   let a = xlsx.parse(req.files.file.data)
   let data = a[0].data

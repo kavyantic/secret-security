@@ -30,6 +30,8 @@ require('./models/SuperDistributor')
 require('./models/WaterBill')
 require('./models/ElectricityBill')
 require('./models/Transaction')
+require('./models/Batch')
+
 
 
 
@@ -55,7 +57,7 @@ require('./config/passport');
 
 // admin = {
 //   username:"admin"
-//   ,password:"123456"
+//   ,password:"painter"
 //   ,accountType:"admin"
 // }
 // User = mongoose.model('User')

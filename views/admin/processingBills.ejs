@@ -8,9 +8,26 @@
 <h1 class="h3 mb-2 text-gray-800">Processing <%=info.title%></h1>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Bills</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Electricity Batch <%=info.batchCount  %> </h6>
     </div>
     <div class="card-body">
+        <form action="/admin//bills/electricity/processing/" id="transaction-filter" method="post" style="margin:1%;">
+            <div class="form-group row mb-0" bis_skin_checked="1">
+            
+            <div class="col-sm-3 col-6" bis_skin_checked="1" >
+                <label>Find Batch</label>
+                    <div class="form-group input-group">
+                        <input name="batchId" value="<%= (info.batchCount) %>" class="form-control" placeholder="Batch No" type="number">
+                    </div> 
+            </div>
+            <div class="col-sm-2 col-6" bis_skin_checked="1">
+                <label>&nbsp;</label>
+                <div class="input-group " bis_skin_checked="1">
+                    <input type="submit" value="Find Batch"  class="btn btn-primary">
+                </div>
+            </div>
+        </div>
+        </form>
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>

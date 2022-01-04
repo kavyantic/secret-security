@@ -30,22 +30,18 @@ router.use((req,res,next)=>{
   }
 })
 router.get('/dashboard',(req,res)=>{
-     Retailer.findOne({username:req.user.username},(err,foundRetailer)=>{
        info = {
-         user:foundRetailer
+         user:req.user
        }
       res.render('retailer/dashboard',{info:info})
-     })
 })
 router.get('/bills/:billType/submit',(req,res)=>{
     billType = req.params.billType
-    Retailer.findOne({username:req.user.username},(err,foundRetailer)=>{
         info = {
-          user:foundRetailer,
+          user:req.user,
           billType:billType
         }
         res.render('retailer/submitBill',{info:info})
-    })
 })
 
 router.get('/bills/electricity/new',(req,res)=>{
@@ -66,7 +62,7 @@ router.post('/bills/electricity/submit',(req,res)=>{
       customer = new ElectricityBill({
         submittedBy:req.user._id,
         submittedByName:req.user.username,
-        customerName:customerName,
+        customerName:billInfo.CUSTNAME,
         kno:kno,
         state:state,
         department:department,
@@ -80,7 +76,7 @@ router.post('/bills/electricity/submit',(req,res)=>{
         }
         else{
           console.log(savedCustomer);
-          Retailer.updateOne({_id:req.user._id},
+          User.updateOne({_id:req.user._id},
             {"$push":{'myBills.electricity':savedCustomer.id}},
             {},
             (err,updatedRetailer)=>{
