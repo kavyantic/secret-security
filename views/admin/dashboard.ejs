@@ -1,9 +1,26 @@
-<%-include('partials/header') %>
+<%-include('partials/header',{user:info.user}) %>
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800 text-hover">Hi, wellcome back <p class="h3 mb-0 text-gray-800">Admin</p></h1>
-</div>
 <div class="row">
+    <div class="col-xl-6 col-md-6 mb-6">
+        
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800 text-hover">Hi, wellcome back <p class="h3 mb-0 text-gray-800">Admin</p></h1>
+        </div>
+    </div>
+    <div class="col-xl-6 col-md-6 mb-6">
+        <form action="/admin/settime" method="post">
+            <div class="input-group" bis_skin_checked="1">
+                <div class="input-group-prepend">
+                   <span class="input-group-text">Set Service Time</span>
+                 </div>
+                 <input name="serviceTime" value="<%=info.serviceTime%>" class="form-control" placeholder="From Date" type="time">
+                 <div class="input-group-append">
+                   <button class="btn btn-outline-primary" type='submit' type="button">Set</button>
+                 </div>
+           </div>
+        </form>
+      
+    </div>
 
     <!-- Earnings (Monthly) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
@@ -76,7 +93,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                             Pending Requests</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%= info.transactions.length %> </div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -86,4 +103,102 @@
         </div>
     </div>
 </div>
-<%-include('partials/footer',{path:""}) %>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Pending Fund Requests</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table " id="fundRequestsTable" width="100%" height="10%"  cellspacing="0">
+                <thead>
+                    <tr>
+                    <th>TransactionID</th>
+                    <th>Status</th>
+                     <th>Username</th>
+                     <th>Account Type</th>
+                     <th>Amount</th>
+                     <th>On</th>
+                     <th>Action</th>
+                </thead>
+                <!-- <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                </tfoot> -->
+                <tbody >
+                    <% info.transactions.forEach(t=>{%>
+                        
+                        <tr id="t<%= t.id %>">
+                            <td class="transaction-id"><%= t.id %> </td>
+                            <td class="transaction-status"><%= t.status %> </td>
+                            <td class="requesting-username"><%= t.to.name %> </td>
+
+                           <td class="requesting-account-type"><%=t.to.accountType%></td>
+                           <td class="transaction-amount"><%=t.amount%></td>
+                           <td class=""><%=t.date.toLocaleDateString()%></td>
+                           <td class=" td update-fund-button">
+                               <button 
+                               type="button" 
+                               class="btn btn-primary user-info" 
+                               data-toggle="modal"  
+                               data-target="#actionModal"
+                               transationId="<%= t.id %>">
+                               Action
+                               </button>
+                           </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Approve or Reject fund request</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body"> 
+           
+            <form action="/admin/fundRequest/update/" method="POST" >
+                <fieldset disabled>
+                    <div class="form-group input-group">
+                    
+                        <input id="requestingUser" class="form-control" placeholder="user" type="text" >
+                     </div> 
+                     <div class="form-group input-group">
+                        <input id="requestingAccountType" class="form-control" placeholder="accountType" type="text">
+                        </div>
+                  <div class="form-group input-group">
+                      <input id="requestedAmount" class="form-control" placeholder="amount" type="text">
+                     </div> 
+                </fieldset>    
+                <input name="transactionId" id="transactionId" class="form-control" placeholder="id" type="number">
+
+              
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Update narration</label>
+                    <textarea name="narration" class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                </div>
+                    <!-- <div><h3 style="font-size: 1em;color: red;text-align: center;">edge</h3></div> -->
+                 <div class="modal-footer">
+                    <button name="action" type="submit" class="btn btn-primary" value="approve">Approve</button>
+                    <button name="action" value="reject" type="submit" class="btn btn-danger">Reject</button>
+                  </div>
+              </form>
+        </div>
+        
+      </div>
+    </div>
+  </div> 
+
+<%-include('partials/footer',{path:"dashboard"}) %>

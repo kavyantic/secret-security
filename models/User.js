@@ -40,6 +40,10 @@ const validator = require('mongoose-validator')
 
 userSchema = new mongoose.Schema({
     username:{
+      collation: {
+        locale: 'en',
+        strength: 2
+      },
       type:String,
       unique:true
      },

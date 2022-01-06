@@ -41,7 +41,7 @@ electricityBillSchema = new mongoose.Schema({
   
   })
 
-electricityBillSchema.plugin(AutoIncrement.plugin,{model:'ElectricityBill',field:"id"}) 
+electricityBillSchema.plugin(AutoIncrement.plugin,{model:'ElectricityBill',field:"id",startAt: 1001}) 
   
 
 

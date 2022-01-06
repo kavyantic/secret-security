@@ -36,7 +36,7 @@ router.use((req,res,next)=>{
       return next()
   } else {
       if(req.method==="GET"){
-        res.redirect(`/login?msg=Please login again&red=superDistributor/${req.url}`)
+        res.redirect(`/login?msg=Please login again&re=superDistributor/${req.url}`)
       } 
       else {
         res.redirect(`/login?msg=Please login again`)

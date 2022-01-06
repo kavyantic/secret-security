@@ -1,4 +1,4 @@
-<%-include('partials/header') %>
+<%-include('partials/header',{user:info.user}) %>
 
   
                     
@@ -18,27 +18,54 @@
                                       <span class="input-group-text"> <i class="fas fa-users-cog"></i> </span>
                                   </div>
                                   <select name="state" class="form-control" id="select-account-type">
-                                    <option>Rajasthan</option>
-                                  </select>
+                                      <option disabled >Select State</option>
+                                      <option value="Cndhra Pradesh">Andhra Pradesh</option>
+                                      <option value="Crunachal Pradesh">Arunachal Pradesh</option>
+                                      <option value="Cssam">Assam</option>
+                                      <option value="Cihar">Bihar</option>
+                                      <option value="Chandigarh">Chandigarh</option>
+                                      <option value="Chhattisgarh">Chhattisgarh</option>
+                                      <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                      <option value="Goa">Goa</option>
+                                      <option value="Gujarat">Gujarat</option>
+                                      <option value="Haryana">Haryana</option>
+                                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                      <option value="Jammu and kashmir">Jammu and kashmir</option>
+                                      <option value="Karnataka">Karnataka</option>
+                                      <option value="Lakshadweep">Lakshadweep</option>
+                                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                      <option value="Maharashtra">Maharashtra</option>
+                                      <option value="Manipur">Manipur</option>
+                                      <option value="Meghalaya">Meghalaya</option>
+                                      <option value="Mizoram">Mizoram</option>
+                                      <option value="Nagaland">Nagaland</option>
+                                      <option value="Nagaland">Nagaland</option>
+                                      <option value="New Delhi">New Delhi</option>
+                                      <option value="Odisha">Odisha</option>
+                                      <option value="Pondicherry">Pondicherry</option>
+                                      <option value="Punjab">Punjab</option>
+                                      <option value="Rajasthan" selected>Rajasthan</option>
+                                      <option value="Sikkim">Sikkim</option>
+                                      <option value="Tamil Nadu">Tamil Nadu</option>
+                                      <option value="Telangana">Telangana</option>
+                                      <option value="Tripura">Tripura</option>
+                                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                      <option value="Uttarakhand">Uttarakhand</option>
+                                      <option value="West Bengal">west Bengal</option>
+                                </select>
                                 </div>
 
                                 <div class="form-group input-group">
                                   <div class="input-group-prepend">
                                     <span class="input-group-text"> <i class="fas fa-users-cog"></i> </span>
                                 </div>
-                                <select name="department" class="form-control" id="select-account-type">
-                                  <option>JVVNL</option>
-                                </select>
+                                <input style="text-transform:uppercase"  name="department" class="form-control" placeholder="Department" type="text" required>
+
                               </div>
-                                  <div class="form-group input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                                     </div>
-                                        <input name="name" class="form-control" placeholder="Customer name" type="text">
-                                    </div> <!-- form-group// -->
+                                  
                                     <div class="form-group input-group">
                                       <div class="input-group-prepend">
-                                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                                        <span class="input-group-text"> <i class="fas fa-id-badge"></i> </span>
                                      </div>
                                         <input name="kno" class="form-control" placeholder="CustomerID" type="text" required>
                                     </div> 

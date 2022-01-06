@@ -42,7 +42,7 @@ waterBillSchema = new mongoose.Schema({
     amount:String
   
   })
-  waterBillSchema.plugin(AutoIncrement.plugin,{model:'WaterBill',field:"id"}) 
+  waterBillSchema.plugin(AutoIncrement.plugin,{model:'WaterBill',field:"id",startAt: 1001}) 
   
 
 

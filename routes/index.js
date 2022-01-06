@@ -7,8 +7,8 @@ router.use('/admin',require('./admin'))
 router.use('/superDistributor',require('./superDistributor'))
 router.use('/distributor',require('./distributor'))
 router.use('/retailer',require('./retailer'))
-router.get('/trash',(req,res)=>{
-    res.render('admin/trash')
+router.get('/departments',(req,res)=>{
+    res.render('departments')
 })
 
 

@@ -37,19 +37,29 @@ router.use((req,res,next)=>{
       return next()
   } else {
       if(req.method==="GET"){
-        res.redirect(`/login?msg=Please login again&red=admin/${req.url}`)
+        res.redirect(`/login?msg=Please login again&re=/${req.url}`)
       } 
       else {
         res.redirect(`/login?msg=Please login again`)
       }
   }
-  
 })
 router.get('/dashboard',(req,res)=>{
-       info = {
-         user:req.user
-       }
-      res.render('admin/dashboard',{info:info})
+  console.log(process.env.serviceTime);
+    var future = new Date(); 
+    prevDate = future.setDate(future.getDate() - 30);
+    Transaction.find({status:"pending"},(err,transactions)=>{
+      info = { 
+        serviceTime : process.env.serviceTime,
+        user:req.user,
+        transactions:transactions 
+      }
+     res.render('admin/dashboard',{info:info})
+    })
+ })
+ router.post('/settime',(req,res)=>{
+   process.env.serviceTime = req.body.serviceTime
+   res.redirect("/admin/dashboard")
  })
 router.get('/bills/electricity/new',(req,res)=>{
     ElectricityBill.find({},(err,bills)=>{ 
@@ -63,12 +73,24 @@ router.get('/bills/electricity/new',(req,res)=>{
     })
 })
 router.get('/bills/electricity/processing/',(req,res)=>{
-  req.query.count
-  BatchElectricity.nextCount((err,count)=>{
-    BatchElectricity.findOne({id:count-1},(err,batch)=>{
-      ProElecBill.find({id:{$in:batch.bills}},(err,bills)=>{
+    BatchElectricity.nextCount((err,count)=>{
+    if(count>0){
+      BatchElectricity.findOne({id:count-1},(err,batch)=>{
+        ProElecBill.find({id:{$in:batch.bills}},(err,bills)=>{
+          info = {
+            batchCount:count-1,
+            user:req.user,
+            bills:bills,
+            query:"electricity",
+            title:"Electricity bills"
+          }
+         res.render('admin/processingBills',{info:info})
+        })   
+       })
+    } else {
+      ProElecBill.find({},(err,bills)=>{
         info = {
-          batchCount:count-1,
+          batchCount:0,
           user:req.user,
           bills:bills,
           query:"electricity",
@@ -76,7 +98,8 @@ router.get('/bills/electricity/processing/',(req,res)=>{
         }
        res.render('admin/processingBills',{info:info})
       })   
-     })
+    }
+    
   })
 })
 router.get('/bills/water/new',(req,res)=>{
@@ -103,8 +126,9 @@ router.get('/bills/water/processing',(req,res)=>{
 })
 router.get('/members/list/:accountType',(req,res)=>{
    User.find({accountType:req.params.accountType}).then((result)=>{
+     
       info = {
-        accountType:req.params.accountType,
+        accountType:req.params.accountType.toUpperCase(),
         user:req.user,
         members:result
       }
@@ -139,10 +163,10 @@ router.get('/members/update/:type/:user',(req,res)=>{
       res.render('admin/updateMember',{info:info})
     })
 })
-
 router.get('/transactions',(req,res)=>{
   Transaction.find({},(err,docs)=>{
     var info = {
+      user:req.user,
       title:"Transactions",
       transactions:docs
     }
@@ -150,10 +174,42 @@ router.get('/transactions',(req,res)=>{
     res.render('admin/transactions',{info:info})
   })
 })
+router.post('/fundRequest/update/',(req,res)=>{
+  id = req.body.transactionId
+  console.log(req.body);
+  nrr = req.body.narration
+  let action = req.body.action
+  let query = nrr?{narration:nrr}:{}
+  if(action=='approve'){
+    let approveQuery = {status:"approved",active:true,...query}
+    Transaction.findOneAndUpdate({id:id},approveQuery,{},(err,updatedTransaction)=>{
+      if(!err){
+        let name = updatedTransaction.to.name
+        let amt = updatedTransaction.amount
+        User.findOneAndUpdate({username:name},{"$inc":{"balance":amt}},{},(err,doc)=>{
+          if(!err){
+            res.redirect('/admin/dashboard')
+          }
+          else {
+            res.status(400).send(err)
+          }
+        })
+      } else {
+        res.send(err)
+      }
+    })
 
-
-
-// Posts //
+  } else if(action='reject') {
+    let approveQuery = {status:"rejected",active:false,...query}
+    Transaction.findOneAndUpdate({id:id},approveQuery,{},(err,updatedTransaction)=>{
+      if(!err){
+        res.redirect('/admin/dashboard/')
+      } else {
+        res.send(err)
+      }
+    })
+  }
+})
 router.post('/bills/electricity/processing/',(req,res)=>{
     batchId = req.body.batchId
     if(batchId){
@@ -203,19 +259,26 @@ router.post('/members/update/:type/:user',(req,res)=>{
       })
 })
 router.post('/transactions',(req,res)=>{
-  const {toDate,fromDate,toName,fromName,type} = req.body
+  const {toDate,fromDate,toName,fromName,type,department,status} = req.body
   query = {}
   if(toDate || fromDate){
     query.date= {}
     toDate?query.date["$lte"] = new Date(req.body.toDate.split("-")).setHours(24):""
     fromDate?query.date["$gte"] = new Date(req.body.fromDate.split("-")).setHours(0, 0, 0, 0):""
   }
+  status?query.status = status:""
+  department?query.department = department:""
+  type?query.type = type:""
   toName?query["to.name"] = toName:""
   fromName?query["from.name"] = fromName: ""
   console.log(query);
   Transaction.find(query,
     (err,docs)=>{
     var info = {
+      user:req.user,
+      type:type,
+      status:status,
+      department:department,
       title:"Transactions",
       transactions:docs,
       toDate:toDate,
@@ -251,9 +314,11 @@ router.post('/members/updateBalance/:type/:user',(req,res)=>{
   let pos_amt = Math.abs(amt)
   User.findOneAndUpdate({username:req.params.user},{"$inc":{"balance":amt}},{},(err,doc)=>{
     if(!err){
-      res.redirect('/admin/members/list'+type)
+      res.redirect('/admin/members/list/'+type)
       if(amt>0){
         transaction = new Transaction({
+        type:'FUNDADD',
+        department:'SELF',
          amount:pos_amt,
          from:{
            id:req.user._id,
@@ -267,6 +332,8 @@ router.post('/members/updateBalance/:type/:user',(req,res)=>{
       } else {
         transaction = new Transaction({
           amount:pos_amt,
+          type:'FUNDLESS',
+          department:'SELF',
           to:{  
             id:req.user._id,
             name:req.user.username
@@ -361,7 +428,16 @@ router.post('/bills/electricity/uploadStatus',(req,res)=>{
   // }
 
 })
-
+router.post('/bills/electricity/updateOne',(req,res)=>{
+  const {id,status,receipt} = req.body
+  ProElecBill.updateOne({id:id},{status:status,receiptNo:receipt},{},(err,doc)=>{
+      if(!err){
+        res.redirect('/admin/bills/electricity/processing/')
+      } else {
+        console.log(err);
+      }
+  })
+})
 module.exports = router
 
 

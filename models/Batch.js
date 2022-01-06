@@ -3,7 +3,6 @@ const AutoIncrement = require('mongoose-auto-increment');
 const validator = require('mongoose-validator')
 
 
-
 batchElectricity = new mongoose.Schema({
     name:{
         type:String,
@@ -34,7 +33,7 @@ batchWater = new mongoose.Schema({
   
   })
 
-batchElectricity.plugin(AutoIncrement.plugin,{model:'BatchElectricity',field:"id"}) 
+batchElectricity.plugin(AutoIncrement.plugin,{model:'BatchElectricity',field:"id",startAt: 101}) 
 batchWater.plugin(AutoIncrement.plugin,{model:'BatchWater',field:"id",startAt: 100}) 
 
   

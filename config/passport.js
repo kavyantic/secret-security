@@ -7,10 +7,10 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     User.findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
-      if (!user) { return done(null, false); }
+      if (!user) { return done("No user found with this username", false); }
       console.log(user.password+" "+password);
       console.log(user.passport==password)
-      if (!(user.password == password)) { console.log("password didnt match");return done(null, false); }
+      if (!(user.password == password)) { return done("Password did not match", false); }
       return done(null, user);
     });
   }

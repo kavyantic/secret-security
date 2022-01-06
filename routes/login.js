@@ -26,12 +26,6 @@ router.use((req,res,next)=>{
  
  
 
-
-router.get('/index',(req,res)=>{
-    console.log(req.msg);
-    res.render('admin/new-bills',{info:{},bills:[]})
-})
-
 router.get('/',(req,res)=>{
     template_params = {
         msg:req.query.msg,
@@ -45,16 +39,18 @@ router.get('/',(req,res)=>{
 router.post('/admin',(req,res)=>{
     req.user.accountType = "admin"
     red_url = req.body.redirect
-    req.login(req.user,(err)=>{
+    passport.authenticate("local")(req,res,function(err,user){
         if(err){
-            res.redirect(`/login?msg=${err}`)
+           res.redirect(`/login?msg=${err}`)
         } else {
-            passport.authenticate("local")(req,res,function(err){
-                console.log(err);
-                res.redirect(red_url?`/${red_url}`:'/admin/dashboard')
-                
-            })
-        }
+            req.login(req.user,(err)=>{
+                if(err){
+                    res.redirect(`/login?msg=${err}`)
+                } else {
+                    res.redirect(red_url?`/${red_url}`:'/admin/dashboard')
+                }
+            })  
+         }
     })
 })
 router.post('/superDistributor',(req,res)=>{
@@ -64,10 +60,12 @@ router.post('/superDistributor',(req,res)=>{
         if(err){
             res.redirect(`/login?msg=${err}`)
         } else {
-            passport.authenticate("local")(req,res,function(err){
-                console.log(err);
-                res.redirect(red_url?`/${red_url}`:'/superDistributor/dashboard')
-                
+            passport.authenticate("local")(req,res,function(err,user){
+                if(err){
+                    res.redirect(`/login?msg=${err}`)
+                } else {
+                    res.redirect(red_url?`/${red_url}`:'/superDistributor/dashboard')
+                }  
             })
         }
     })

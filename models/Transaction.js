@@ -6,8 +6,22 @@ const validator = require('mongoose-validator')
 
 
 const transactionSchema = new mongoose.Schema({
+    active:{
+        type:Boolean,
+        default:true
+    },
     type:{
+        type:String,
+        enum:['FUNDADD','FUNDLESS','BILLUPLOAD','FUNDREQUEST']
+    },
+    department:{
+        type:String
+    },
 
+    status:{
+        type:String,
+        enum:['approved','pending','rejected'],
+        default:'approved'
     },
     customerNo:{
 
@@ -24,6 +38,10 @@ const transactionSchema = new mongoose.Schema({
         default:Date.now
     },
     from:{
+        accountType:{
+            type:String,
+            enum:['retailer','distributor','superdistributor','admin','electricity','water']
+        },
         id:{
 
             type:mongoose.Schema.Types.ObjectId,
@@ -34,6 +52,10 @@ const transactionSchema = new mongoose.Schema({
         }
     },
     to:{
+        accountType:{
+            type:String,
+            enum:['retailer','distributor','superdistributor','admin','electricity','water']
+        },
         id:{
 
             type:mongoose.Schema.Types.ObjectId,
@@ -48,7 +70,7 @@ const transactionSchema = new mongoose.Schema({
         enum:['Retailer','Distributor','SuperDistributor','Admin']
     }
 })
-transactionSchema.plugin(AutoIncrement.plugin,{model:'Transaction',field:"id"}) 
+transactionSchema.plugin(AutoIncrement.plugin,{model:'Transaction',field:"id",startAt: 101}) 
 
 mongoose.model('Transaction',transactionSchema)
 

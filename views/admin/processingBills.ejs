@@ -1,4 +1,4 @@
-<%-include('partials/header') %>
+<%-include('partials/header',{user:info.user}) %>
 
 <form id="upload-bill-form" method="post" action="/admin/bills/electricity/uploadStatus" enctype="multipart/form-data">
     <!-- <label for="files[]">Upload status</label> -->
@@ -59,15 +59,15 @@
                 </tfoot> -->
                 <tbody>
                     <% info.bills.forEach(bill=>{%>
-                        <tr>
-                            <td><%=bill.id %></td>
-                            <td><%=bill.kno%></td>
-                            <td><%=bill.state%></td>
-                            <td><%=bill.department%></td>
+                        <tr id="b<%=bill.id %> ">
+                            <td class="id"><%=bill.id %></td>
+                            <td class="kno"><%=bill.kno%></td>
+                            <td class="status"><%=bill.state%></td>
+                            <td class="department"><%=bill.department%></td>
                             <td><%=bill.billDueDate%></td>
-                            <td><%=bill.amount%> ₹</td>
-                            <td class="<%= bill.status %>"><%=bill.status%></td>
-                            <td><%=bill.receiptNo || "N/A"%></td>
+                            <td class="amount"><%=bill.amount%> ₹</td>
+                            <td class="<%= bill.status %> status-update"><a href="#"><%=bill.status%></a></td>
+                            <td class="status-update"><a href="#"><%=bill.receiptNo || "N/A"%></a></td>
                             <!-- <td><%=bill.submittedAt.toLocaleDateString()%></td> -->
                             <!-- <td><%=bill.submittedBy%></td> -->
                             <!-- <td><button type="button" class="btn btn-warning">Edit</button></td> -->
@@ -78,4 +78,40 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update bill</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body"> 
+            <form action="/admin/bills/electricity/updateOne/" method="POST" id="login-form">
+                <div class="form-group">
+                    <label for="status">Status</label>
+
+                  <select name="status" id="status" class="form-control">
+                    <option class="successfull">SUCCESSFULL</option>
+                    <option class="processing">PROCESSING</option>
+                    <option class="failed">FAILD</option>
+                  </select>
+                </div>
+                 <input type="hidden" id="receiptId" name="id" value="">
+                <div class="form-group">
+                  <label for="receipt">Receipt Number</label>
+                  <input type="text" class="form-control" name="receipt" id="receipt" placeholder="Receipt number" value="">
+                </div>
+                 <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">save</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                  </div>
+              </form>
+        </div>
+        
+      </div>
+    </div>
+  </div> 
+
 <%-include('partials/footer',{path:"processingBills"}) %>

@@ -1,0 +1,72 @@
+<%-include('partials/header',{user:info.user}) %>
+
+<!-- <h1 class="h3 mb-2 text-gray-800">Make a fund request </h1> -->
+                 
+<div class="container mt-5">
+    <div class="row">
+      
+      <div class="col-sm-6  ">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="login-page-heading">Request fund</h3>
+  
+            <!-- Makes POST request to /login route -->
+              <form actionid="signup-form" action="/retailer/balance/request" method="post" id="retailer-fund-request">
+              <div class="form-group input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> <i class="fas fa-users-cog"></i> </span>
+              </div>
+              <select name="from" class="form-control" id="select-account-type">
+                <option>Admin</option>
+              </select>
+            </div>
+              <div class="form-group input-group">
+                    <input name="amount" class="form-control" placeholder="Amount" type="number" required>
+                </div> <!-- form-group// -->
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Narrate</label>
+                    <textarea name="narration" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                  </div>
+                <!-- <div class="form-group input-group" id="sponsered-by-input">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fas fa-asterisk"></i> </span>
+                    </div>
+                    <input name="sponser" class="form-control" placeholder="Sponser ID">
+                </div>  -->
+                
+                <!-- form-group// -->
+               
+               
+               <!-- form-group end.// -->
+                 <!-- form-group// -->
+                <!-- <div class="custom-control custom-checkbox">
+                  <input name="ckeckbox" type="checkbox" class="custom-control-input" id="customCheck1">
+                  <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
+                </div> -->
+                <!-- form-group// -->  
+                <h3 class="err-msg" style="color:red;font-size:1em;padding:4%;"><%=info.msg%></h3>                                                         
+                                      
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Make request  </button>
+                </div>
+                 <!-- form-group// -->      
+            </form>
+  
+          </div>
+        </div>
+      </div>
+  
+      <!-- <div class="col-sm-4">
+        <div class="card">
+          <div class="card-body">
+            <a class="btn btn-block" href="/auth/google" role="button">
+              <i class="fab fa-google"></i>
+              Sign In with Google
+            </a>
+          </div>
+        </div>
+      </div> -->
+  
+    </div>
+  </div>
+<%-include('partials/footer',{path:"processingBills"}) %>

@@ -12,6 +12,7 @@ const format = require('string-format')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const autoIncrement = require('mongoose-auto-increment');
 const fileUpload = require('express-fileupload');
+process.env.serviceTime = "23:59"
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -57,7 +58,7 @@ require('./config/passport');
 
 // admin = {
 //   username:"admin"
-//   ,password:"painter"
+//   ,password:"123456"
 //   ,accountType:"admin"
 // }
 // User = mongoose.model('User')
