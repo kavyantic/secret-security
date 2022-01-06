@@ -111,7 +111,7 @@ router.post('/bills/electricity/submit',(req,res)=>{
     .then(billInfo=>{
       console.log(billInfo);
       if(billInfo.STATUSCODE==0){
-        if(Number(billInfo.BILLAMT)>=Number(req.user.balance)){
+        if(Number(billInfo.BILLAMT)>Number(req.user.balance)){
           res.redirect(`/retailer/bills/electricity/submit?msg=${"You dont have enough balance"}`)
         } else {
          
