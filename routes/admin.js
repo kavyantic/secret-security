@@ -12,7 +12,6 @@ const WaterBill = mongoose.model('WaterBill')
 const ProWaterBill = mongoose.model('ProcessingWaterBill')
 const Transaction = mongoose.model('Transaction')
 const BatchElectricity =   mongoose.model('BatchElectricity')
-
 const xlsx = require('node-xlsx')
 // const xlsx = require('xlsx')
 
@@ -48,7 +47,7 @@ router.get('/dashboard',(req,res)=>{
   console.log(process.env.serviceTime);
     var future = new Date(); 
     prevDate = future.setDate(future.getDate() - 30);
-    Transaction.find({status:"pending"},(err,transactions)=>{
+    Transaction.find({status:"PENDING"},(err,transactions)=>{
       info = { 
         serviceTime : process.env.serviceTime,
         user:req.user,
