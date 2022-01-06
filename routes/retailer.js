@@ -31,10 +31,16 @@ router.use((req,res,next)=>{
   }
 })
 router.get('/dashboard',(req,res)=>{
-       info = {
-         user:req.user
-       }
+
+  Transaction.find({type:'FUNDREQUEST','to.name':req.user.username},(err,transactions)=>{
+    info = { 
+      serviceTime : process.env.serviceTime,
+      user:req.user,
+      transactions:transactions 
+    }
       res.render('retailer/dashboard',{info:info})
+    })
+
 })
 router.get('/bills/:billType/submit',(req,res)=>{
     billType = req.params.billType
@@ -72,12 +78,21 @@ router.get('/bills/electricity/processing',(req,res)=>{
 router.get('/balance/request',(req,res)=>{ 
   res.render('retailer/fundRequest')
 })
-
+router.get('/fundRequest/cancel/:id',(req,res)=>{
+  id = req.params.id
+  Transaction.deleteOne({'to.name':req.user.username,id:id},(err)=>{
+    if(!err){
+      res.redirect('/retailer/dashboard')
+    } else {
+      res.send(err)
+    }
+  })
+})
 router.post('/balance/request',(req,res)=>{
   const {to,amount,narration} = req.body
   transaction = new Transaction({
-    type:"fundRequest",
-    status:"pending",
+    type:"FUNDREQUEST",
+    status:"PENDING",
     narration:narration,
     amount:amount,
     to:{
@@ -93,7 +108,7 @@ router.post('/balance/request',(req,res)=>{
   })
   transaction.save((err,saved)=>{
     if(!err){
-      res.redirect('/balance/request')
+      res.redirect('/retailer/dashboard')
     }
   })
 })

@@ -181,7 +181,7 @@ router.post('/fundRequest/update/',(req,res)=>{
   let action = req.body.action
   let query = nrr?{narration:nrr}:{}
   if(action=='approve'){
-    let approveQuery = {status:"approved",active:true,...query}
+    let approveQuery = {status:"APPROVED",active:true,...query}
     Transaction.findOneAndUpdate({id:id},approveQuery,{},(err,updatedTransaction)=>{
       if(!err){
         let name = updatedTransaction.to.name
@@ -200,7 +200,7 @@ router.post('/fundRequest/update/',(req,res)=>{
     })
 
   } else if(action='reject') {
-    let approveQuery = {status:"rejected",active:false,...query}
+    let approveQuery = {status:"REJECTED",active:false,...query}
     Transaction.findOneAndUpdate({id:id},approveQuery,{},(err,updatedTransaction)=>{
       if(!err){
         res.redirect('/admin/dashboard/')
