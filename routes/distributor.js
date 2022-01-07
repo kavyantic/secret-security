@@ -31,7 +31,6 @@ const xlsx = require('node-xlsx')
 //   return next()
 // })
 router.use((req,res,next)=>{
-  
   if((req.isAuthenticated() && req.user.accountType==="distributor")){
       return next()
   } else {
@@ -42,7 +41,6 @@ router.use((req,res,next)=>{
         res.redirect(`/login?msg=Please login again`)
       }
   }
-  
 })
 router.get('/dashboard',(req,res)=>{
        info = {
@@ -95,7 +93,7 @@ router.get('/bills/water/processing',(req,res)=>{
     })
 })
 router.get('/members/list/',(req,res)=>{
-   User.find({_id:{$in:req.user.myMembers.retailer}}).then((result)=>{
+   User.find({username:{$in:req.user.myRetailers}}).then((result)=>{
       info = {
         user:req.user,
         members:result

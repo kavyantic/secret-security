@@ -1,0 +1,103 @@
+<%-include('partials/header',{user:info.user}) %>
+
+  
+  <h1 class="h3 mb-2 text-gray-800"><%=info.title%>  </h1>
+  <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+      </div>
+      <div class="card-body">
+        <form action="/retailer/transactions" id="transaction-filter" method="post">
+          <div class="form-group row mb-0" bis_skin_checked="1">
+            <div class="col-sm-3 col-6" bis_skin_checked="1">
+                <label>From Date</label>
+                    <input name="fromDate" value=<%=info.fromDate%> id="fromDate" class="form-control" autocomplete="off" placeholder="From Date" type="date">
+            </div>
+            <div class="col-sm-3 col-6" bis_skin_checked="1">
+                <label>To Date</label>
+                    <input name="toDate" value=<%=info.toDate %>  id="fromDate" class="form-control" autocomplete="off" placeholder="From Date" type="date">
+            </div>
+            <!-- <div class="col-sm-3 col-6" bis_skin_checked="1" >
+                <label>From</label>
+                    <div class="form-group input-group">
+                        <input name="fromName" value=""  class="form-control" placeholder="MemberID" type="text">
+                      </div> 
+            </div>
+            <div class="col-sm-3 col-6" bis_skin_checked="1" >
+                <label>To</label>
+                    <div class="form-group input-group">
+                        <input name="toName" value="" class="form-control" placeholder="MemberID" type="text">
+                      </div> 
+            </div> -->
+            <div class="col-sm-3 col-6" bis_skin_checked="1" >
+              <label>Status</label>
+                  <div class="form-group input-group">
+                      <input name="status" value="<%=info.status %>" class="form-control" placeholder="Status" type="text">
+                    </div> 
+          </div>
+          <div class="col-sm-3 col-6" bis_skin_checked="1" >
+            <label>Type</label>
+                <div class="form-group input-group">
+                    <input name="type" value="<%=info.type %>" class="form-control" placeholder="Type" type="text">
+                  </div> 
+        </div>
+          <div class="col-sm-3 col-6" bis_skin_checked="1" >
+            <label>Department</label>
+                <div class="form-group input-group">
+                    <input name="department" value="<%=info.department %>" class="form-control" placeholder="Department" type="text">
+                  </div> 
+        </div>
+            <div class="col-sm-2 col-6" bis_skin_checked="1">
+                <label>&nbsp;</label>
+                <div class="input-group " bis_skin_checked="1">
+                    <input type="submit" value="Filter"  class="btn btn-primary">
+                </div>
+            </div>
+        </div>
+        </form>
+   
+            <div class="table-responsive">
+              <table class="table table-striped " id="transactions-table">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">Receipt</th>
+                    <th scope="col">status</th>
+                    <th scope="col">Narration</th>
+                    <th scope="col">type</th>
+                    <th scope="col">From</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% info.transactions.forEach(t=>{%>
+                    <tr>
+                      <th class="id" scope="row"><%=t.id%></th>
+                      <th class="date" ><%=t.date.toLocaleDateString()%></th>
+                      <td class="department" ><%=t.department%></td>
+                      <td class="receipt" ><%=t.receiptNo%></td>
+                      <td class="status" ><%=t.status%></td>
+                      <td class="narration" ><%=t.narration%></td>
+                      <td class="type" ><%=t.type%></td>
+                      <td class="from" ><%=t.from.name%></td>
+                      <td class="amount"><%=t.amount %>  ₹</td>
+                      <td class="to"><%=t.to.name %></td>
+                    </tr>
+                  <% }) %>
+                 
+                  <!-- <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird sdfsd sdf s sd fsdf sd fsdfsdf sdfsd sdf s sd fsdf sd fsdfsdf </td>
+                    <td>@twitterd </td>
+                  </tr> -->
+                </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+ 
+<%-include('partials/footer',{path:"transactions"}) %>

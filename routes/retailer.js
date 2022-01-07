@@ -30,6 +30,7 @@ router.use((req,res,next)=>{
       }
   }
 })
+
 router.get('/dashboard',(req,res)=>{
 
   Transaction.find({type:'FUNDREQUEST','to.name':req.user.username},(err,transactions)=>{
@@ -41,6 +42,20 @@ router.get('/dashboard',(req,res)=>{
       res.render('retailer/dashboard',{info:info})
     })
 
+})
+router.get('/transactions',(req,res)=>{
+  Transaction.find({$or:[
+    {'to.name':req.user.username},
+    {'from.name':req.user.username}
+  ]},(err,docs)=>{
+    var info = {
+      user:req.user,
+      title:"My Transactions",
+      transactions:docs
+    }
+    console.log(docs);
+    res.render('retailer/transactions',{info:info})
+  })
 })
 router.get('/bills/:billType/submit',(req,res)=>{
     billType = req.params.billType
@@ -88,11 +103,44 @@ router.get('/fundRequest/cancel/:id',(req,res)=>{
     }
   })
 })
+router.post('/transactions',(req,res)=>{
+  const {toDate,fromDate,type,department,status} = req.body
+  query = {$or:[
+    {'to.name':req.user.username},
+    {'from.name':req.user.username}
+  ]}
+  if(toDate || fromDate){
+    query.date= {}
+    toDate?query.date["$lte"] = new Date(req.body.toDate.split("-")).setHours(24):""
+    fromDate?query.date["$gte"] = new Date(req.body.fromDate.split("-")).setHours(0, 0, 0, 0):""
+  }
+  status?query.status = status:""
+  department?query.department = department:""
+  type?query.type = type:""
+  // toName?query["to.name"] = toName:""
+  // fromName?query["from.name"] = fromName: ""
+  console.log(query);
+  Transaction.find(query,
+    (err,docs)=>{
+    var info = {
+      user:req.user,
+      type:type,
+      status:status,
+      department:department,
+      title:"Transactions",
+      transactions:docs,
+      toDate:toDate,
+      fromDate:fromDate,
+    }
+    res.render('retailer/transactions',{info:info})
+  })
+})
 router.post('/balance/request',(req,res)=>{
   const {to,amount,narration} = req.body
   transaction = new Transaction({
     type:"FUNDREQUEST",
     status:"PENDING",
+    department:"SELF",
     narration:narration,
     amount:amount,
     to:{
@@ -113,7 +161,7 @@ router.post('/balance/request',(req,res)=>{
   })
 })
 router.post('/bills/electricity/submit',(req,res)=>{
-  console.log(process.env.serviceTime);
+  console.log(req.body);  
   let time = new Date()
   h = String(time.getHours())
   m = String(time.getMinutes())
@@ -129,7 +177,6 @@ router.post('/bills/electricity/submit',(req,res)=>{
         if(Number(billInfo.BILLAMT)>Number(req.user.balance)){
           res.redirect(`/retailer/bills/electricity/submit?msg=${"You dont have enough balance"}`)
         } else {
-         
           customer = new ElectricityBill({
             submittedBy:req.user._id,
             submittedByName:req.user.username,
@@ -142,12 +189,12 @@ router.post('/bills/electricity/submit',(req,res)=>{
           })
           customer.save((err,savedCustomer)=>{
             if(err){
-              res.send(err)
+              res.redirect(`/retailer/bills/electricity/submit?msg=${err}`)
               console.log(err);
             }
             else{
               transaction = new Transaction({
-                type:'billUpload',
+                type:'BILLUPLOAD',
                 department:department,
                 customerNo:kno,
                 amount:billInfo.BILLAMT,
@@ -178,7 +225,7 @@ router.post('/bills/electricity/submit',(req,res)=>{
         }
   
       }  else {
-        res.send(billInfo.STATUSMSG)
+        res.redirect(`/retailer/bills/electricity/submit?msg=${billInfo.STATUSMSG}`)
       }
       
     }) 
@@ -188,8 +235,6 @@ router.post('/bills/electricity/submit',(req,res)=>{
     
  
 })
-      
-
 router.post('/bills/water/submit',(req,res)=>{
   const {customerName,kno,state,department} = req.body
   fetch(format(apiURL,department,kno))

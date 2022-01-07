@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-auto-increment');
-const validator = require('mongoose-validator')
+const uniqueValidator = require('mongoose-unique-validator');
 
 
 
@@ -43,6 +43,7 @@ electricityBillSchema = new mongoose.Schema({
 
 electricityBillSchema.plugin(AutoIncrement.plugin,{model:'ElectricityBill',field:"id",startAt: 1001}) 
   
+electricityBillSchema.plugin(uniqueValidator, {message: ' {VALUE} is already in progress'});
 
 
 

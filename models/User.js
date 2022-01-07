@@ -1,41 +1,8 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const passportLocalMongoose = require('passport-local-mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 const validator = require('mongoose-validator')
-
-// userSchema = new mongoose.Schema({
-//     username:{
-//       type:String,
-//       unique:true
-//      },
-      
-//     accountType:{
-//         type:String,
-//         required:true,
-//         enum:["admin","superdistributor","distributor","retailer"]
-//     },
-//     // accountType:{
-//     //   type:mongoose.Schema.Types.ObjectId,
-//     //   refPath:"refModel"
-//     // },
-//     // refModel:{
-//     //   type:String,
-//     //   enum:["Admin","SuperDistributor","Distributor","Retailer"]
-//     // },
-    
-//     password: {
-//       type: String,
-//       minlength: 4,
-//       maxlength: 16,
-//       trim: true,
-//     },
-//     canSetServiceTime:{type:Boolean,default:false},
-//     canViewReport:{type:Boolean,default:false},
-//     canRegisterAccount:{type:Boolean,default:false},
-//     canUploadBills:{type:Boolean,default:true},
-//     canAddMoney:{type:Boolean,default:true},
-//     canDeductMoney:{type:Boolean,default:true}
-//   })
 
 
 userSchema = new mongoose.Schema({
@@ -70,7 +37,7 @@ userSchema = new mongoose.Schema({
       type: String,
       lowercase: true,
       // require:[true,"Please enter your email"],
-      // unique:[true,"A distributor with this email already exists"],
+      unique:[true,"A distributor with this email already exists"],
       trim: true,
       validate: [
         validator({
@@ -81,23 +48,21 @@ userSchema = new mongoose.Schema({
     },
     phone:{
       type:String,
-      // unique:true,
+      unique:true,
       // $regex: '^[6-9]\d{9}$' 
   
     },
     mySponser:{
-      name:{type:String},
-      id:{
-        type:mongoose.Schema.Types.ObjectId,
-        refPath:"refModel"
-      }
+      type:String
     },
     balance:Number,
     myRetailers:[
-      {type:mongoose.Schema.Types.ObjectId,ref:"Retailers"}
+      // {type:mongoose.Schema.Types.ObjectId,ref:"Retailers"}
+      {type:String}
     ],
     myDistributor:[
-      {type:mongoose.Schema.Types.ObjectId,ref:"Distributor"}
+      // {type:mongoose.Schema.Types.ObjectId,ref:"Distributor"}
+      {type:String }
     ],
     myBills:{
       electricity:[],
@@ -114,6 +79,9 @@ userSchema = new mongoose.Schema({
     canAddMoney:{type:Boolean,default:true},
   })
   
+  
+userSchema.plugin(uniqueValidator, {message: '{VALUE} is already in use'});
+
 userSchema.methods.verifyPassword = (password)=>{
   return true
 }

@@ -27,7 +27,7 @@ infoButtons.forEach((btn)=>{
         let name = e.target.getAttribute('username')
         let td = document.querySelector(`#${name}`)
         updateUrl.setAttribute('href',("/admin/members/update/"+url).replace(/([^:]\/)\/+/g, "$1"))
-        updateBalanceForm.setAttribute('action',("/admin/members/updateBalance/"+url).replace(/([^:]\/)\/+/g, "$1"))
+        updateBalanceForm.setAttribute('action',("/distributor/members/updateBalance/"+url).replace(/([^:]\/)\/+/g, "$1"))
         addAccount.setAttribute('href',`/admin/${name}/addMember`)
         username.innerHTML = name 
         pass.innerHTML = td.querySelector('.password').innerHTML

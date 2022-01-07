@@ -43,10 +43,12 @@ router.use((req,res,next)=>{
       }
   }
 })
-router.get('/dashboard',(req,res)=>{
+router.get('/dashboard',(req,res)=>{ 
   console.log(process.env.serviceTime);
     var future = new Date(); 
-    prevDate = future.setDate(future.getDate() - 30);
+    prevMonth = future.setDate(future.getDate() - 30);
+    prevDate = future.setDate(future.getDate() - 1);
+    ProElecBill.f
     Transaction.find({status:"PENDING"},(err,transactions)=>{
       info = { 
         serviceTime : process.env.serviceTime,
@@ -56,6 +58,64 @@ router.get('/dashboard',(req,res)=>{
      res.render('admin/dashboard',{info:info})
     })
  })
+router.get('/:accountName/addMember',(req,res)=>{
+  let name = req.params.accountName
+  User.findOne({'username':name},(err,foundUser)=>{
+  if(!err && foundUser){
+    if(foundUser.accountType=="distributor"){
+      User.find({accountType:'retailer'},(err,retailers)=>{
+        info = {
+          name:name,
+          alreadyAdded:foundUser.myRetailers,
+          user:req.user,
+          members:retailers,
+          accountType:foundUser.accountType,
+          memberType:"Retailers"
+        }
+        res.render('admin/addChildMember',{info:info})
+      })
+    } else if(foundUser.accountType=='superdistributor') {
+      User.find({accountType:'distributor'},(err,dist)=>{
+        info = {
+          name:name,
+          user:req.user,
+          alreadyAdded:foundUser.myDistributors,
+          members:dist,
+          accountType:foundUser.accountType,
+          memberType:"Distributors"
+        }
+        res.render('admin/addChildMember',{info:info})
+      })
+    } else {
+      res.send("sorry")
+    }
+  } else {
+    console.log(err,foundUser);
+    res.redirect("/admin/dashboard")
+  }
+  
+  })
+
+})
+router.get('/addMember/:parentMember/:parentAccountType/:childMember',(req,res)=>{
+  parentMember = req.params.parentMember
+  childMember = req.params.childMember
+  parentAccountType = req.params.parentAccountType
+  if(parentAccountType=='distributor'){
+    User.findOneAndUpdate({username:childMember},{mySponser:parentMember},(err,updatedChild)=>{
+        User.updateOne({username:parentMember},{$push:{myRetailers:updatedChild.username}},(err,doc)=>{
+          res.redirect('/admin/members/list/'+parentAccountType)
+        })
+    })
+  } else if(parentAccountType=='superdistributor') {
+    User.findOneAndUpdate({username:childMember},{mySponser:parentMember},(err,updatedChild)=>{
+        User.updateOne({username:parentMember},{$push:{myDistributors:updatedChild.username}},(err,doc)=>{
+          res.redirect('/admin/members/list/'+parentAccountType)
+        })
+    })
+  }
+
+})
  router.post('/settime',(req,res)=>{
    process.env.serviceTime = req.body.serviceTime
    res.redirect("/admin/dashboard")
@@ -73,7 +133,7 @@ router.get('/bills/electricity/new',(req,res)=>{
 })
 router.get('/bills/electricity/processing/',(req,res)=>{
     BatchElectricity.nextCount((err,count)=>{
-    if(count>0){
+    if(count>101){
       BatchElectricity.findOne({id:count-1},(err,batch)=>{
         ProElecBill.find({id:{$in:batch.bills}},(err,bills)=>{
           info = {
@@ -146,6 +206,8 @@ router.get('/members/info/:type/:user',(req,res)=>{
 router.get('/members/register',(req,res)=>{
     info = {
       user:req.user,
+      msg: req.query.msg
+
     }
    res.render('admin/registerMember',{info:info})
 })
@@ -303,7 +365,7 @@ router.post('/members/register/:type',(req,res)=>{
         if(!err){
           res.redirect('/admin/members/list/'+type)
         } else {
-          res.status(400).send(err)
+          res.redirect(`/admin/members/register?msg=${err}`)
         }
       })
 })

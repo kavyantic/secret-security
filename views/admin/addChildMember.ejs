@@ -1,0 +1,63 @@
+<%-include('partials/header',{user:info.user}) %>
+    <!-- Page Heading -->
+                 <h1 class="h3 mb-2 text-gray-800">Add members under <%=info.accountType%> <span class="mr-2  d-lg-inline text-gray-600 large"><%= info.name %></span> </h1>
+                 <div class="card shadow mb-4">
+                     <div class="card-header py-3">
+                         <h6 class="m-0 font-weight-bold text-primary">Add <%=info.memberType%> </h6>
+                     </div>
+                     <div class="card-body">
+                         <div class="table-responsive">
+                             <table class="table table-bordered" id="dataTable" width="100%" height="10%"  cellspacing="0">
+                                 <thead>
+                                     <tr>
+                                      <th>Username</th>
+                                      <th>Password</th>
+                                      <th>Email</th>
+                                      <th>Balance</th>
+                                      <th>Phone</th>
+                                      <th>Add</th>
+                                 </thead>
+                                 <!-- <tfoot>
+                                     <tr>
+                                         <th>Name</th>
+                                         <th>Position</th>
+                                         <th>Office</th>
+                                         <th>Age</th>
+                                         <th>Start date</th>
+                                         <th>Salary</th>
+                                     </tr>
+                                 </tfoot> -->
+                                 <tbody >
+                                     <% info.members.forEach(user=>{%>
+                                         <tr id=<%=user.username%> >
+                                            <td class="td username"><%=user.username%></td>
+                                            <td class="td password"><%=user.password%></td>
+                                            <td class="td email"><%=user.email%></td>
+                                            <td class="td balance"><%=user.balance || "0"%> ₹</td>
+                                            <td class="td phone"><%=user.phone%></td>
+                                            <td class=" td info-button">
+                                                <form action="/admin/addMember/<%= info.name %>/<%= info.accountType %>/<%= user.username %>" method="get">
+                                                    <button 
+                                                    type="submit" 
+                                                    class="btn btn-primary">
+                                                   Add </button>
+                                                </form>
+                                               
+                                            </td>
+                                         </tr>
+                                     <% }) %>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+               
+        
+               
+              
+   
+
+           
+         
+      
+<%-include('partials/footer',{path:"addChildMember"}) %>
