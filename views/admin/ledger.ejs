@@ -58,9 +58,9 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th class="from">Current Bal.</th>
+                    <th class="from">Opening Bal.</th>
                     <th></th>
-                    <th class="credit"><%= info.ledgerAccount.balance %> ₹</th>
+                    <th class="credit">0 ₹</th>
                   </tr>
                     <% info.transactions.forEach((t)=>{ info.index+=1%>
                       <% if(t.to.name==info.ledgerAccount.username){ info.totalDr+=Number(t.amount) %> 
@@ -101,7 +101,19 @@
                       <th></th>
                       <th></th>
                       <th></th>
-                      <th class="from">Closing Bal.</th>
+                      <th class="from">Current Bal.</th>
+                      <th class="debit"></th>
+                      <th class="credit"><%= info.ledgerAccount.balance %> ₹</th>
+                    </tr>
+                    <tr>
+                      <th><%= info.index+2 %> </th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th class="from">Total</th>
                       <th class="debit"><%= info.totalDr %> ₹</th>
                       <th class="credit"><%= info.totalCr %> ₹</th>
                     </tr>
