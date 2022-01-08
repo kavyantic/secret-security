@@ -105,13 +105,13 @@ router.get('/addMember/:parentMember/:parentAccountType/:childMember',(req,res)=
   parentAccountType = req.params.parentAccountType
   if(parentAccountType=='distributor'){
     User.findOneAndUpdate({username:childMember},{mySponser:parentMember},(err,updatedChild)=>{
-        User.updateOne({username:parentMember},{$addToSet:{myRetailers:updatedChild._id}},(err,doc)=>{
+        User.updateOne({username:parentMember},{$addToSet:{myRetailers:updatedChild.username}},(err,doc)=>{
           res.redirect(`/admin/${parentMember}/addMember/`)
         })
     })
   } else if(parentAccountType=='superdistributor') {
     User.findOneAndUpdate({username:childMember},{mySponser:parentMember},(err,updatedChild)=>{
-        User.updateOne({username:parentMember},{$addToSet:{myDistributors:updatedChild._id}},(err,doc)=>{
+        User.updateOne({username:parentMember},{$addToSet:{myDistributors:updatedChild.username}},(err,doc)=>{
           res.redirect(`/admin/${parentMember}/addMember/`)
         })
     })
@@ -124,13 +124,13 @@ router.get('/removeMember/:parentMember/:parentAccountType/:childMember',(req,re
   parentAccountType = req.params.parentAccountType
   if(parentAccountType=='distributor'){
     User.findOneAndUpdate({username:childMember},{mySponser:""},(err,updatedChild)=>{
-        User.updateOne({username:parentMember},{$pull:{myRetailers:updatedChild._id}},(err,doc)=>{
+        User.updateOne({username:parentMember},{$pull:{myRetailers:updatedChild.username}},(err,doc)=>{
           res.redirect(`/admin/${parentMember}/addMember/`)
         })
     })
   } else if(parentAccountType=='superdistributor') {
     User.findOneAndUpdate({username:childMember},{mySponser:""},(err,updatedChild)=>{
-        User.updateOne({username:parentMember},{$pull:{myDistributors:updatedChild._id}},(err,doc)=>{
+        User.updateOne({username:parentMember},{$pull:{myDistributors:updatedChild.username}},(err,doc)=>{
           res.redirect(`/admin/${parentMember}/addMember/`)
         })
     })
@@ -551,7 +551,7 @@ router.post('/bills/electricity/uploadStatus',(req,res)=>{
                 from:{
                   accountType:'electricity',
                   name:"bill"
-                }
+                } 
               })
                Promise.all([
                  transaction.save(err=>{console.log(err);}),

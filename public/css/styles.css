@@ -83,7 +83,9 @@ button.dt-button.buttons-html5 {
 .SUCCESSFUL {
   color:rgb(31, 182, 31)
 }
-
 .FAILED {
   color:red;
+  pointer-events: none;
+  cursor: default;
+
 }
