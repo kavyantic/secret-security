@@ -134,16 +134,7 @@ router.get('/members/update/:type/:user',(req,res)=>{
     })
 })
 
-router.get('/transactions',(req,res)=>{
-  Transaction.find({},(err,docs)=>{
-    var info = {
-      title:"Transactions",
-      transactions:docs
-    }
-    console.log(docs);
-    res.render('admin/transactions',{info:info})
-  })
-})
+
 router.get('/members/list/',(req,res)=>{
   User.find({username:{$in:req.user.myDistributors}}).then((result)=>{
      info = {
@@ -212,7 +203,41 @@ router.post('/members/updateBalance/:user',(req,res)=>{
  
  
 })
-
+router.get('/transactions',(req,res)=>{
+  Transaction.find({$or:[
+    {'to.name':req.user.username},
+    {'from.name':req.user.username}
+  ],active:true},(err,docs)=>{
+    console.log(docs);
+    var info = {
+      user:req.user,
+      totalDr:0,
+      totalCr:0,
+      title:"My Transactions",
+      transactions:docs
+    }
+    console.log(docs);
+    res.render('superDistributor/transactions',{info:info})
+  })
+})
+router.get('/ledger',(req,res)=>{
+  query = {$or:[
+    {'to.name':req.user.username},
+    {'from.name':req.user.username}
+  ],active:true}
+      Transaction.find(query,(err,docs)=>{
+        var info = {
+          user:req.user,
+          transactions:docs,
+          ledgerAccount:req.user,
+          totalDr:0,
+          totalCr:req.user.balance,
+          index:1
+        }
+     
+      res.render('superDistributor/ledger',{info:info})
+  })
+})
 
 // Posts //
 router.post('/members/update/:type/:user',(req,res)=>{
@@ -255,7 +280,7 @@ router.post('/transactions',(req,res)=>{
       toName:toName,
       fromName:fromName
     }
-    res.render('admin/transactions',{info:info})
+    res.render('superDistributor/transactions',{info:info})
   })
 })
 

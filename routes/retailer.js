@@ -176,6 +176,24 @@ router.post('/balance/request',(req,res)=>{
     }
   })
 })
+router.get('/ledger',(req,res)=>{
+  query = {$or:[
+    {'to.name':req.user.username},
+    {'from.name':req.user.username}
+  ],active:true}
+      Transaction.find(query,(err,docs)=>{
+        var info = {
+          user:req.user,
+          transactions:docs,
+          ledgerAccount:req.user,
+          totalDr:0,
+          totalCr:req.user.balance,
+          index:1
+        }
+     
+      res.render('retailer/ledger',{info:info})
+  })
+})
 router.post('/bills/electricity/submit',(req,res)=>{
   console.log(req.body);  
   let time = new Date()
