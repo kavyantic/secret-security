@@ -1,0 +1,122 @@
+<%-include('partials/header',{user:info.user}) %>
+
+  
+  <h1 class="h3 mb-2 text-gray-800">Accounts of <span class="text-primary"><%=info.ledgerAccount.username %></span>  </h1>
+  <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+      </div>
+      <div class="card-body">
+        <form action="/admin/ledger" id="transaction-filter" method="post">
+          <div class="form-group row mb-0" bis_skin_checked="1">
+            <div class="col-sm-3 col-6" bis_skin_checked="1">
+                <label>From Date</label>
+                    4<input name="fromDate" value=<%=info.fromDate%> id="fromDate" class="form-control" autocomplete="off" placeholder="From Date" type="date">
+            </div>
+            <div class="col-sm-3 col-6" bis_skin_checked="1">
+                <label>To Date</label>
+                    <input name="toDate" value=<%=info.toDate %>  id="fromDate" class="form-control" autocomplete="off" placeholder="From Date" type="date">
+            </div>
+            <div class="col-sm-3 col-6" bis_skin_checked="1" >
+                <label>Member</label>
+                    <div class="form-group input-group">
+                        <input name="member" value="<%=info.ledgerAccount.username %>"  class="form-control" placeholder="MemberID" type="text">
+                      </div> 
+            </div>
+            <div class="col-sm-2 col-6" bis_skin_checked="1">
+              <label>&nbsp;</label>
+              <div class="input-group " bis_skin_checked="1">
+                  <input type="submit" value="Filter"  class="btn btn-primary">
+              </div>
+          </div>
+        </form>
+        <%if(info.transactions.length){ %> 
+
+            <div class="table-responsive">
+              <table class="table table-striped " id="transactions-table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">Receipt</th>
+                    <th scope="col">status</th>
+                    <th scope="col">Narration</th>
+                    <th scope="col">type</th>
+                    <th scope="col">From</th>
+                    <th scope="col">Debit</th>
+                    <th scope="col">Credit</th>
+                  </tr>
+                </thead>
+              
+                <tbody>
+                  <tr>
+                    <th><%= info.index %> </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th class="from">Current Bal.</th>
+                    <th></th>
+                    <th class="credit"><%= info.ledgerAccount.balance %> ₹</th>
+                  </tr>
+                    <% info.transactions.forEach((t)=>{ info.index+=1%>
+                      <% if(t.to.name==info.ledgerAccount.username){ info.totalDr+=Number(t.amount) %> 
+                      <tr>
+                        <th class="id" scope="row"><%=info.index%></th>
+                        <th class="date" ><%=t.date.toLocaleDateString()%></th>
+                        <td class="department" ><%=t.department%></td>
+                        <td class="receipt" ><%=t.receiptNo%></td>
+                        <td class="status" ><%=t.status%></td>
+                        <td class="narration" ><%=t.narration%></td>
+                        <td class="type" ><%=t.type%></td>
+                        <td class="from" ><%=t.from.name%></td>
+                        <td class="debit"><%=t.amount %> ₹</td>
+                        <td class="credit">  </td>
+                        
+                      </tr>
+                      <% } else { info.totalCr+=Number(t.amount)%>
+                        <tr>
+                          <th class="id" scope="row"><%=info.index%></th>
+                          <th class="date" ><%=t.date.toLocaleDateString()%></th>
+                          <td class="department" ><%=t.department%></td>
+                          <td class="receipt" ><%=t.receiptNo%></td>
+                          <td class="status" ><%=t.status%></td>
+                          <td class="narration" ><%=t.narration%></td>
+                          <td class="type" ><%=t.type%></td>
+                          <td class="to"><%=t.to.name %></td>
+                          <td class="debit"></td>
+                          <td class="credit"><%=t.amount %> ₹</td>
+                          
+                        </tr> 
+                        <% } %> 
+                    <% }) %>
+                    <tr>
+                      <th><%= info.index+1 %> </th>
+                      <th><%= new Date().toLocaleDateString()%> </th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th class="from">Closing Bal.</th>
+                      <th class="debit"><%= info.totalDr %> ₹</th>
+                      <th class="credit"><%= info.totalCr %> ₹</th>
+                    </tr>
+                    <% } %> 
+
+                  <!-- <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird sdfsd sdf s sd fsdf sd fsdfsdf sdfsd sdf s sd fsdf sd fsdfsdf </td>
+                    <td>@twitterd </td>
+                  </tr> -->
+                </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+ 
+<%-include('partials/footer',{path:"transactions"}) %>

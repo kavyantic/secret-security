@@ -255,6 +255,46 @@ router.get('/transactions',(req,res)=>{
     res.render('admin/transactions',{info:info})
   })
 })
+router.get('/ledger',(req,res)=>{
+  var info = {
+    user:req.user,
+    title:"Ledger",
+    transactions:[],
+    ledgerAccount:{},
+    totalDr:0,
+    totalCr:0,
+    index:1
+  }
+      res.render('admin/ledger',{info:info})
+})
+
+router.post('/ledger/',(req,res)=>{
+  member = req.body.member
+  query = {$or:[
+    {'to.name':member},
+    {'from.name':member}
+  ],active:true}
+  User.findOne({username:member},(err,found)=>{
+    if(!err && found){
+      Transaction.find(query,(err,docs)=>{
+        var info = {
+          user:req.user,
+          title:"Ledger",
+          transactions:docs,
+          ledgerAccount:found,
+          totalDr:0,
+          totalCr:found.balance,
+          index:1
+        }
+        console.log(docs);
+        res.render('admin/ledger',{info:info})
+      })
+    } else {
+      res.redirect('/admin/dashboard')
+    }
+  })
+ 
+})
 router.post('/fundRequest/update/',(req,res)=>{
   id = req.body.transactionId
   console.log(req.body);
@@ -366,6 +406,7 @@ router.post('/transactions',(req,res)=>{
       fromDate:fromDate,
       toName:toName,
       fromName:fromName
+
     }
     res.render('admin/transactions',{info:info})
   })
