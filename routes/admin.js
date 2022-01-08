@@ -55,13 +55,15 @@ router.get('/dashboard',(req,res)=>{
         user:req.user,
         transactions:transactions 
       }
+      
      res.render('admin/dashboard',{info:info})
-    })
+    }) 
  })
 router.get('/:accountName/addMember',(req,res)=>{
   let name = req.params.accountName
   User.findOne({'username':name},(err,foundUser)=>{
   if(!err && foundUser){
+    console.log(foundUser);
     if(foundUser.accountType=="distributor"){
       User.find({accountType:'retailer'},(err,retailers)=>{
         info = {
@@ -103,18 +105,36 @@ router.get('/addMember/:parentMember/:parentAccountType/:childMember',(req,res)=
   parentAccountType = req.params.parentAccountType
   if(parentAccountType=='distributor'){
     User.findOneAndUpdate({username:childMember},{mySponser:parentMember},(err,updatedChild)=>{
-        User.updateOne({username:parentMember},{$push:{myRetailers:updatedChild.username}},(err,doc)=>{
-          res.redirect('/admin/members/list/'+parentAccountType)
+        User.updateOne({username:parentMember},{$addToSet:{myRetailers:updatedChild._id}},(err,doc)=>{
+          res.redirect(`/admin/${parentMember}/addMember/`)
         })
     })
   } else if(parentAccountType=='superdistributor') {
     User.findOneAndUpdate({username:childMember},{mySponser:parentMember},(err,updatedChild)=>{
-        User.updateOne({username:parentMember},{$push:{myDistributors:updatedChild.username}},(err,doc)=>{
-          res.redirect('/admin/members/list/'+parentAccountType)
+        User.updateOne({username:parentMember},{$addToSet:{myDistributors:updatedChild._id}},(err,doc)=>{
+          res.redirect(`/admin/${parentMember}/addMember/`)
         })
     })
   }
 
+})
+router.get('/removeMember/:parentMember/:parentAccountType/:childMember',(req,res)=>{
+  parentMember = req.params.parentMember
+  childMember = req.params.childMember
+  parentAccountType = req.params.parentAccountType
+  if(parentAccountType=='distributor'){
+    User.findOneAndUpdate({username:childMember},{mySponser:""},(err,updatedChild)=>{
+        User.updateOne({username:parentMember},{$pull:{myRetailers:updatedChild._id}},(err,doc)=>{
+          res.redirect(`/admin/${parentMember}/addMember/`)
+        })
+    })
+  } else if(parentAccountType=='superdistributor') {
+    User.findOneAndUpdate({username:childMember},{mySponser:""},(err,updatedChild)=>{
+        User.updateOne({username:parentMember},{$pull:{myDistributors:updatedChild._id}},(err,doc)=>{
+          res.redirect(`/admin/${parentMember}/addMember/`)
+        })
+    })
+  }
 })
  router.post('/settime',(req,res)=>{
    process.env.serviceTime = req.body.serviceTime

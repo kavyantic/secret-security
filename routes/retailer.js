@@ -47,9 +47,12 @@ router.get('/transactions',(req,res)=>{
   Transaction.find({$or:[
     {'to.name':req.user.username},
     {'from.name':req.user.username}
-  ]},(err,docs)=>{
+  ],active:true},(err,docs)=>{
+    console.log(docs);
     var info = {
       user:req.user,
+      totalDr:0,
+      totalCr:0,
       title:"My Transactions",
       transactions:docs
     }
@@ -66,6 +69,13 @@ router.get('/bills/:billType/submit',(req,res)=>{
           msg:msg
         }
         res.render('retailer/submitBill',{info:info})
+})
+router.get('/bills/water/submit',(req,res)=>{
+    info = {
+      user:req.user,
+      msg:req.query.msg
+    }
+    res.render('retailer/waterBill',{info:info})
 })
 
 router.get('/bills/electricity/new',(req,res)=>{
@@ -90,8 +100,11 @@ router.get('/bills/electricity/processing',(req,res)=>{
    res.render('retailer/processingBills',{info:info})
   }) 
 })
-router.get('/balance/request',(req,res)=>{ 
-  res.render('retailer/fundRequest')
+router.get('/balance/request',(req,res)=>{
+  info = {
+    user:req.user
+  } 
+  res.render('retailer/fundRequest',{info:info})
 })
 router.get('/fundRequest/cancel/:id',(req,res)=>{
   id = req.params.id
@@ -108,7 +121,7 @@ router.post('/transactions',(req,res)=>{
   query = {$or:[
     {'to.name':req.user.username},
     {'from.name':req.user.username}
-  ]}
+  ],active:true}
   if(toDate || fromDate){
     query.date= {}
     toDate?query.date["$lte"] = new Date(req.body.toDate.split("-")).setHours(24):""
@@ -123,6 +136,8 @@ router.post('/transactions',(req,res)=>{
   Transaction.find(query,
     (err,docs)=>{
     var info = {
+      totalDr:0,
+      totalCr:0,
       user:req.user,
       type:type,
       status:status,
@@ -143,6 +158,7 @@ router.post('/balance/request',(req,res)=>{
     department:"SELF",
     narration:narration,
     amount:amount,
+    active:false,
     to:{
       accountType:req.user.accountType,
       name:req.user.username,
@@ -228,6 +244,45 @@ router.post('/bills/electricity/submit',(req,res)=>{
         res.redirect(`/retailer/bills/electricity/submit?msg=${billInfo.STATUSMSG}`)
       }
       
+    }) 
+  } else {
+    res.redirect(`/retailer/bills/electricity/submit?msg=${"Service has been closed"}`)
+  }
+    
+ 
+})
+router.post('/bills/electricity/fetch',(req,res)=>{
+  console.log(req.body);  
+  let time = new Date()
+  h = String(time.getHours())
+  m = String(time.getMinutes())
+  currentTime = (h.length==2?h:"0"+h)+":"+(m.length==2?m:"0"+m)
+  if(process.env.serviceTime>currentTime){
+    const {customerName,kno,state,department} = req.body
+    fetch(format(apiURL,department,kno)) 
+    .then((apiResponse)=>apiResponse.text())
+    .then(billInfo=>JSON.parse(billInfo))
+    .then(billInfo=>{
+      console.log(billInfo);
+      if(billInfo.STATUSCODE==0){
+        let = info = {
+          user:req.user,
+          amount:billInfo.BILLAMT,
+          customerName:billInfo.CUSTNAME,
+          dueDate:billInfo.BILLDUEDATE,
+          billNo:billInfo.BILLNO,
+        }
+        if(Number(billInfo.BILLAMT)<=Number(req.user.balance)){
+          info.status="success"
+          res.render('retailer/submitBill',{info:info})
+        } else {
+          info.status="danger"
+          info.msg = "You dont have enough balance"
+          res.render('retailer/submitBill',{info:info})
+        }
+      }  else {
+        res.redirect(`/retailer/bills/electricity/submit?msg=${billInfo.STATUSMSG}`)
+      }
     }) 
   } else {
     res.redirect(`/retailer/bills/electricity/submit?msg=${"Service has been closed"}`)

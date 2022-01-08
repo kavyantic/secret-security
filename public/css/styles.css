@@ -63,6 +63,12 @@ button.dt-button.buttons-html5 {
 
 
 
+.debit {
+  color:green;
+}
+.credit {
+  color:red;
+}
 /* #upload-bill-form label{
   color:blue;
 } */

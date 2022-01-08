@@ -101,34 +101,28 @@ router.get('/members/list/',(req,res)=>{
      res.render('distributor/listMembers',{info:info})
   })
 })
-router.get('/members/info/:type/:user',(req,res)=>{
-  req.model.findOne({username:req.params.user},(err,foundUser)=>{
-    if(!err){
-      res.send(foundUser)
+
+router.get('/members/update/:user',(req,res)=>{
+  let user = req.params.user
+  User.findOne({username:user},(err,foundMember)=>{
+    if(req.user.myRetailers.includes(foundMember.username)){
+      info = {
+        user:req.user,
+        auth:foundMember,
+      }
+      res.render('distributor/updateMember',{info:info})
     } else {
-      res.send(err)
+      res.send('Retailer is not under you')
     }
   })
-}) 
+})
 router.get('/members/register',(req,res)=>{
     info = {
       user:req.user,
     }
    res.render('distributor/registerMember',{info:info})
 })
-router.get('/members/update/:type/:user',(req,res)=>{
-  let user = req.params.user
-  let type = req.params.type
-  User.findOne({username:user},(err,foundMember)=>{
-      info = {
-        userType:type,
-        userName:user,
-        user:req.user,
-        auth:foundMember,
-      }
-      res.render('admin/updateMember',{info:info})
-    })
-})
+
 
 router.get('/transactions',(req,res)=>{
   Transaction.find({},(err,docs)=>{
@@ -144,25 +138,21 @@ router.get('/transactions',(req,res)=>{
 
 
 // Posts //
-router.post('/members/update/:type/:user',(req,res)=>{
+
+router.post('/members/update/:user',(req,res)=>{
   let user = req.params.user
   let data = req.body 
-  let type = req.params.type
-  data.canSetServiceTime = data.canSetServiceTime?true:false
   data.canViewReport = data.canViewReport?true:false
-  data.canRegisterAccount = data.canRegisterAccount?true:false
   data.canUploadBills = data.canUploadBills?true:false
-  data.canAddMoney = data.canAddMoney?true:false
-  data.canDeductMoney = data.canDeductMoney?true:false
   User.updateOne({username:user},data,{},(err,updatedUser)=>{
         if(!err){
-          res.redirect('/admin/members/list/'+type)
+          res.redirect('/distributor/members/list/')
         } else {
            console.log(err);
+           res.send(err)
         }
       })
 })
-
 router.post('/transactions',(req,res)=>{
   const {toDate,fromDate,toName,fromName,type} = req.body
   query = {}
@@ -187,22 +177,17 @@ router.post('/transactions',(req,res)=>{
     res.render('admin/transactions',{info:info})
   })
 })
-
 router.post('/members/register/',(req,res)=>{
   let data = req.body
   data.accountType = 'retailer'
-  data.canSetServiceTime = data.canSetServiceTime?true:false
   data.canViewReport = data.canViewReport?true:false
-  data.canRegisterAccount = data.canRegisterAccount?true:false
   data.canUploadBills = data.canUploadBills?true:false
-  data.canAddMoney = data.canAddMoney?true:false
-  data.canDeductMoney = data.canDeductMoney?true:false
   console.log(data);
   
   user = new User(data)
   user.save((err,savedRetailer)=>{
         if(!err){
-          User.updateOne({_id:req.user._id},{$push:{'myMembers.retailer':savedRetailer._id}},{},(err)=>{
+          User.updateOne({_id:req.user._id},{$addToSet:{'myRetailers':savedRetailer._id}},{},(err)=>{
             if(!err){
               res.status(200).send({msg:"Successfull"})
 
@@ -219,7 +204,6 @@ router.post('/members/register/',(req,res)=>{
 
 router.post('/members/updateBalance/:type/:user',(req,res)=>{
   let amt = req.body.amount
-  let type = req.params.type
   let pos_amt = Math.abs(amt)
   User.findOneAndUpdate({username:req.params.user},{"$inc":{"balance":amt}},{},(err,doc)=>{
     if(!err){

@@ -10,8 +10,9 @@ router.use('/retailer',require('./retailer'))
 router.get('/departments',(req,res)=>{
     res.render('departments')
 })
-router.get('*',(req,res)=>{
-    res.redirect('/login')
-})
+// router.get('*',(req,res)=>{
+//     console.log("unknowe URL");
+//     res.redirect('/login')
+// })
 
 module.exports = router

@@ -60,7 +60,7 @@ userSchema = new mongoose.Schema({
       // {type:mongoose.Schema.Types.ObjectId,ref:"Retailers"}
       {type:String}
     ],
-    myDistributor:[
+    myDistributors:[
       // {type:mongoose.Schema.Types.ObjectId,ref:"Distributor"}
       {type:String }
     ],

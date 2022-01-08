@@ -1,9 +1,9 @@
-<%-include('partials/header') %>
+<%-include('partials/header',{user:info.user}) %>
     <!-- Page Heading -->
-                 <h1 class="h3 mb-2 text-gray-800">My retailers</h1>
+                 <h1 class="h3 mb-2 text-gray-800">Your RETAILERS</h1>
                  <div class="card shadow mb-4">
                      <div class="card-header py-3">
-                         <h6 class="m-0 font-weight-bold text-primary">Retailers Info</h6>
+                         <h6 class="m-0 font-weight-bold text-primary">Retailers  Info</h6>
                      </div>
                      <div class="card-body">
                          <div class="table-responsive">
@@ -30,13 +30,20 @@
                                  <tbody >
                                      <% info.members.forEach(user=>{%>
                                          <tr id=<%=user.username%> >
-                                            <td class="username"><%=user.username%></td>
-                                            <td class="password"><%=user.password%></td>
-                                            <td class="email"><%=user.email%></td>
-                                            <td class="balance"><%=user .balance || "0"%> ₹</td>
-                                            <td class="phone"><%=user.phone%></td>
-                                            <td class="info-button"><button type="button" class="btn btn-primary user-info" data-toggle="modal" data-target="#infoModal" 
-                                                info-url="" >Info</button></td>
+                                            <td class="td username"><%=user.username%></td>
+                                            <td class="td password"><%=user.password%></td>
+                                            <td class="td email"><%=user.email%></td>
+                                            <td class="td balance"><%=user.balance || "0"%> ₹</td>
+                                            <td class="td phone"><%=user.phone%></td>
+                                            <td class=" td info-button">
+                                                <button 
+                                                type="button" 
+                                                class="btn btn-primary user-info" 
+                                                data-toggle="modal" 
+                                                data-target="#infoModal" 
+                                                username=<%= user.username %> > Info
+                                             </button>
+                                            </td>
                                          </tr>
                                      <% }) %>
                                  </tbody>
@@ -58,8 +65,8 @@
                      </div>
                      <div class="modal-body"> 
                        <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Distributor</h4>
-                        <table id="topopup2tbl" width="100%">
+                        <h4 class="alert-heading">Retailers </h4>
+                        <table id="" width="100%">
                             <tbody>
                                 <!-- <tr>
                                     <td>MemberType :</td>
@@ -82,32 +89,32 @@
                                 <tr>
                                     <td>Email :</td>
                                     <td>
-                                        <label id="Email">kavyarahul@gmail.com</label>
+                                        <label id="Email"></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Mobile :</td>
                                     <td>
-                                        <label id="Mobile">9214566789</label>
+                                        <label id="Phone"></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Balance :</td>
                                     <td>
-                                        <label id="Balance">4590</label><span> ₹</span>
+                                        <label id="Balance"></label>
                                     </td>
                                 </tr>
                                 
                                 <tr>
                                     <td>SponsoredBy :</td>
                                     <td>
-                                        <label id="Sponsor">Admin</label>
+                                        <label id="Sponsor"></label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Update Member :</td>
                                     <td>
-                                        <a id="Update" href="/admin/members/update/">Update</a>
+                                        <a id="Update" href="/distributor/members/update/">Update</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -118,30 +125,7 @@
                                           </a>                                   
                                      </td>
                                 </tr>
-                                <!-- <tr>
-                                    <td>DOB :</td>
-                                    <td>
-                                        <label id="DOJ">11/18/2021</label>
-                                    </td>
-                                </tr> -->
-                                <!-- <tr>
-                                    <td>Address :</td>
-                                    <td>
-                                        <label id="address">jaipur</label>
-                                    </td>
-                                </tr> -->
-                                <!-- <tr>
-                                    <td>Atatus :</td>
-                                    <td>
-                                        <label id="status">InActive</label>
-                                    </td>
-                                </tr> -->
-                                <!-- <tr>
-                                    <td>KycStatus :</td>
-                                    <td>
-                                        <label id="kycstatus">Pending</label>
-                                    </td>
-                                </tr> -->
+                              
                             </tbody>
                         </table>
                        
@@ -151,9 +135,9 @@
                         <div class="alert alert-warning" role="alert">
                             <h5 class="alert-heading">Balance</h5>
                             <div class="alert alert-primary" role="alert">
-                                <span>@Admin to </span><span>@Hell</span>
-                                </div>
-                               <form id="UpdateBalanceForm" action="/admin/members/updateBalance/" method="post">
+                                <span class="from">@<%= info.user.username %></span > to <span class="to" ></span>
+                                    </div>
+                               <form id="UpdateBalanceForm" action="/distributor/members/updateBalance/" method="post">
                                 <div class="form-group input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>

@@ -1,4 +1,4 @@
-<%-include('partials/header') %>
+<%-include('partials/header',{user:info.user}) %>
                     
                     <!-- Page Heading -->
                     <div class="container mt-5">
@@ -11,7 +11,7 @@
                       
                                 <!-- Makes POST request to /login route -->
                                   
-                                <form actionid="signup-form" action="/admin/members/update/<%=info.userType%>/<%=info.userName%>" method="post" id="admin-register-member">
+                                <form actionid="signup-form" action="/distributor/members/update/<%=info .username%>" method="post" id="distributor-register-member">
                                   <div class="row">
                                     <div class="col">
                                       <div class="form-group input-group">
@@ -24,7 +24,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                                          </div>
-                                            <input name="email" class="form-control" value=<%=info.auth.email %> placeholder="Email address" type="email">
+                                             <input name="email" class="form-control" value=<%=info.auth.email %> placeholder="Email address" type="email">
                                         </div> 
                                         <!-- <div class="form-group input-group" id="sponsered-by-input">
                                             <div class="input-group-prepend">
@@ -32,7 +32,7 @@
                                             </div>
                                             <input name="sponser" class="form-control" placeholder="Sponser ID">
                                         </div>  -->
-                                        
+                    
                                         <!-- form-group// -->
                                         <div class="form-group input-group">
                                           <div class="input-group-prepend">
@@ -59,34 +59,7 @@
                                           </div>
                                       </div>                                    
                                     <div class="col">
-                                            <div hide="retailer" class="form-check">
-                                              <input name="canRegisterAccount " class="form-check-input" type="checkbox" value="true" id="flexCheckChecked" <%=info.auth.canRegisterMember && "checked"%>>
-                                              <label class="form-check-label" for="flexCheckChecked">
-                                                Can register member
-                                              </label>
-                                            </div>
-                                            <hr>
-                                            <div class="form-check">
-                                              <input name="canSetServiceTime" class="form-check-input" type="checkbox" value="false" id="canSetServiceTime" <%=info.auth.canSetServiceTime && "checked"%>>
-                                              <label class="form-check-label" for="canSetServiceTime">
-                                                Can set service time
-                                              </label>
-                                            </div>
-                                            <hr>
-                                            <div class="form-check">
-                                              <input name="canAddMoney" class="form-check-input" type="checkbox" value="true" id="canAddMoney" <%=info.auth.canAddMoney && "checked"%>>
-                                              <label class="form-check-label" for="flexCheckChecked">
-                                                 Can add money
-                                              </label>
-                                            </div>
-                                            <hr>
-                                            <div class="form-check">
-                                              <input name= "canDeductMoney" class="form-check-input" type="checkbox" value="false" id="canDeductMoney" <%=info.auth.canDeductMoney && "checked"%>>
-                                              <label class="form-check-label" for="flexCheckChecked">
-                                                Can deduct money
-                                              </label>
-                                            </div>
-                                            <hr>
+                    
                                             <div class="form-check">
                                               <input name="canUploadBills" class="form-check-input disabled" type="checkbox" value="true" id="canUploadBills" <%=info.auth.canUploadBills && "checked"%>>
                                               <label class="form-check-label" for="flexCheckChecked">

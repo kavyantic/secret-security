@@ -15,7 +15,7 @@
                                       <th>Email</th>
                                       <th>Balance</th>
                                       <th>Phone</th>
-                                      <th>Add</th>
+                                      <th>Action</th>
                                  </thead>
                                  <!-- <tfoot>
                                      <tr>
@@ -37,10 +37,12 @@
                                             <td class="td phone"><%=user.phone%></td>
                                             <td class=" td info-button">
                                                 <form action="/admin/addMember/<%= info.name %>/<%= info.accountType %>/<%= user.username %>" method="get">
-                                                    <button 
-                                                    type="submit" 
-                                                    class="btn btn-primary">
-                                                   Add </button>
+                                                    <% if(info.alreadyAdded.includes(user.username)){ %> 
+                                                        <button  type="submit" formaction="/admin/removeMember/<%= info.name %>/<%= info.accountType %>/<%= user.username %>" class="btn btn-danger" > Remove </button>
+                                                     <% } else { %> 
+                                                        <button  type="submit"  class="btn btn-primary" > Add </button>
+                                                     <% } %> 
+                                                  
                                                 </form>
                                                
                                             </td>

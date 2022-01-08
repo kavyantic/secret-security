@@ -67,13 +67,25 @@
                     <th scope="col">status</th>
                     <th scope="col">Narration</th>
                     <th scope="col">type</th>
-                    <th scope="col">From</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">To</th>
+                    <th scope="col">MemberId</th>
+                    <th scope="col">Debit</th>
+                    <th scope="col">Credit</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% info.transactions.forEach(t=>{%>
+                    <tr>
+                      <th class="id" scope="row"><%= t.id %> </th>
+                      <th class="date" ><%=t.date.toLocaleDateString()%></th>
+                      <td class="department" ><%=t.department%></td>
+                      <td class="receipt" ><%=t.receiptNo%></td>
+                      <td class="status" ><%=t.status%></td>
+                      <td class="narration" ><%=t.narration%></td>
+                      <td class="type" ><%=t.type%></td>
+                      <td class="from" ><%=t.to.name%></td>
+                      <td class="debit"><%=t.amount %>  ₹</td>
+                      <td class="debit"></td>
+                    </tr>
                     <tr>
                       <th class="id" scope="row"><%=t.id%></th>
                       <th class="date" ><%=t.date.toLocaleDateString()%></th>
@@ -83,9 +95,10 @@
                       <td class="narration" ><%=t.narration%></td>
                       <td class="type" ><%=t.type%></td>
                       <td class="from" ><%=t.from.name%></td>
-                      <td class="amount"><%=t.amount %>  ₹</td>
-                      <td class="to"><%=t.to.name %></td>
+                      <td class="amount"></td>
+                      <td class="credit"><%=t.amount%> ₹</td>
                     </tr>
+                 
                   <% }) %>
                  
                   <!-- <tr>
