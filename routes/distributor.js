@@ -201,7 +201,6 @@ router.post('/members/register/',(req,res)=>{
         }
       })
 })
-
 router.post('/members/updateBalance/:type/:user',(req,res)=>{
   let amt = req.body.amount
   let pos_amt = Math.abs(amt)
@@ -243,8 +242,6 @@ router.post('/members/updateBalance/:type/:user',(req,res)=>{
     }
   })
 })
-
-
 router.get('/createBatch/electricity',(req,res)=>{
   ElectricityBill.find({},(err,bills)=>{
    procBills = bills.map((e)=>{
@@ -275,7 +272,7 @@ router.get('/createBatch/electricity',(req,res)=>{
         }
     })
   })
-})
+}) 
 
 
 router.post('/bills/electricity/uploadStatus',(req,res)=>{

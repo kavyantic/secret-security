@@ -528,7 +528,7 @@ router.post('/bills/electricity/uploadStatus',(req,res)=>{
     obj =   {}
     if(!(i<=1)){
       obj.id = e[0]
-      obj.status = e[6]
+      obj.status = e[6].toUpperCase()
       obj.receiptNo = e[7]
       if(obj.id){
         ProElecBill.updateOne({id:obj.id},{status:obj.status,receiptNo:obj.receiptNo},{},(err,doc)=>{
@@ -536,6 +536,31 @@ router.post('/bills/electricity/uploadStatus',(req,res)=>{
             console.log(err);
           }
         })
+        if(obj.status=="FAILED"){
+          ProElecBill.findOne({id:obj.id},(err,foundBill)=>{
+              transaction = new Transaction({
+                type:'BILLUPLOAD',
+                department:department,
+                customerNo:kno,
+                amount:billInfo.BILLAMT,
+                to:{
+                  accountType:'retailer',
+                  id:foundBill.submittedBy,
+                  name:foundBill.submittedByName
+                },
+                from:{
+                  accountType:'electricity',
+                  name:"bill"
+                }
+              })
+               Promise.all([
+                 transaction.save(err=>{console.log(err);}),
+                  User.updateOne({username:foundBill.submittedByName},{"$inc":{"balance":Number(foundBill.amount)}},{})
+              ])
+            
+          })
+        }
+       
       }
       arr.push(obj)
     }
@@ -551,12 +576,39 @@ router.post('/bills/electricity/uploadStatus',(req,res)=>{
 
 })
 router.post('/bills/electricity/updateOne',(req,res)=>{
-  const {id,status,receipt} = req.body
-  ProElecBill.updateOne({id:id},{status:status,receiptNo:receipt},{},(err,doc)=>{
+  var {id,status,receipt} = req.body
+  status = status.toUpperCase()
+  ProElecBill.findOneAndUpdate({id:id},{status:status,receiptNo:receipt},{},(err,doc)=>{
       if(!err){
         res.redirect('/admin/bills/electricity/processing/')
       } else {
         console.log(err);
+      }
+      if(status=="FAILED"){
+          foundBill = doc
+            transaction = new Transaction({
+              type:'BILLUPLOAD',
+              department:foundBill.department,
+              customerNo:"",
+              amount:foundBill.amount,
+              status:"REJECTED",
+              to:{
+                accountType:'retailer',
+                id:foundBill.submittedBy,
+                name:foundBill.submittedByName
+              },
+              from:{
+                accountType:'electricity',
+                name:"bill"
+              }
+            })
+            console.log(foundBill.amount); 
+  
+             Promise.all([
+               transaction.save(err=>{console.log(err);}),
+                User.updateOne({username:foundBill.submittedByName},{"$inc":{"balance":Math.abs(foundBill.amount)}},{})
+            ])
+          
       }
   })
 })

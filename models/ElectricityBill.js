@@ -66,7 +66,7 @@ processingElectricityBillSchema = new mongoose.Schema({
     },
     status:{
       type:String,
-      enum:["PROCESSING","SUCCESSFUL","FAILD"],
+      enum:["PROCESSING","SUCCESSFUL","FAILED"],
       default:"PROCESSING"
     },
     customerName:String,
