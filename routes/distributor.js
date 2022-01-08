@@ -101,7 +101,63 @@ router.get('/members/list/',(req,res)=>{
      res.render('distributor/listMembers',{info:info})
   })
 })
-
+router.post('/members/updateBalance/:user',(req,res)=>{
+  let amt = Number(req.body.amount)
+  let pos_amt = Math.abs(amt)
+  let member = req.params.user
+  if(amt>0){
+    if(req.user.myRetailers.includes(member)){
+      if(Number(req.user.balance)>=Number(amt)){
+        User.findOneAndUpdate({username:member},{"$inc":{"balance":amt}},{},(err,doc)=>{
+          if(!err){
+            res.redirect('/distributor/members/list/')
+            if(amt>0){
+              transaction = new Transaction({
+              type:'FUNDADD',
+              department:'SELF',
+               amount:pos_amt,
+               from:{
+                 id:req.user._id,
+                 name:req.user.username
+                },
+               to:{
+                 id:doc._id,
+                 name:doc.username
+               } 
+              })
+            } else {
+              transaction = new Transaction({
+                amount:pos_amt,
+                type:'FUNDLESS',
+                department:'SELF',
+                to:{  
+                  id:req.user._id,
+                  name:req.user.username
+                 },
+                from:{
+                  id:doc._id,
+                  name:doc.username
+                } 
+               })
+            }
+            User.updateOne({username:req.user.username},{"$inc":{"balance":(amt*-1)}},{},(err)=>{console.log(err,user);})
+            transaction.save((err,doc)=>{
+              console.log(err,doc);
+            })
+           
+          }
+          else {
+            res.status(400).send(err)
+          }
+        })
+      } else {
+        res.redirect('/distributor/members/list')
+      }
+    }
+  }
+ 
+  
+})
 router.get('/members/update/:user',(req,res)=>{
   let user = req.params.user
   User.findOne({username:user},(err,foundMember)=>{
@@ -122,8 +178,6 @@ router.get('/members/register',(req,res)=>{
     }
    res.render('distributor/registerMember',{info:info})
 })
-
-
 router.get('/transactions',(req,res)=>{
   Transaction.find({},(err,docs)=>{
     var info = {
@@ -137,22 +191,21 @@ router.get('/transactions',(req,res)=>{
 
 
 
-// Posts //
 
-router.post('/members/update/:user',(req,res)=>{
-  let user = req.params.user
-  let data = req.body 
-  data.canViewReport = data.canViewReport?true:false
-  data.canUploadBills = data.canUploadBills?true:false
-  User.updateOne({username:user},data,{},(err,updatedUser)=>{
-        if(!err){
-          res.redirect('/distributor/members/list/')
-        } else {
-           console.log(err);
-           res.send(err)
-        }
-      })
-})
+// router.post('/members/update/:user',(req,res)=>{
+//   let user = req.params.user
+//   let data = req.body 
+//   data.canViewReport = data.canViewReport?true:false
+//   data.canUploadBills = data.canUploadBills?true:false
+//   User.updateOne({username:user},data,{},(err,updatedUser)=>{
+//         if(!err){
+//           res.redirect('/distributor/members/list/')
+//         } else {
+//            console.log(err);
+//            res.send(err)
+//         }
+//       })
+// })
 router.post('/transactions',(req,res)=>{
   const {toDate,fromDate,toName,fromName,type} = req.body
   query = {}
@@ -275,36 +328,7 @@ router.get('/createBatch/electricity',(req,res)=>{
 }) 
 
 
-router.post('/bills/electricity/uploadStatus',(req,res)=>{
-  let a = xlsx.parse(req.files.file.data)
-  let data = a[0].data
-  let arr = []
-  data.map((e,i)=>{
-    obj =   {}
-    if(!(i<=1)){
-      obj.id = e[0]
-      obj.status = e[6]
-      obj.receiptNo = e[7]
-      if(obj.id){
-        ProElecBill.updateOne({id:obj.id},{status:obj.status,receiptNo:obj.receiptNo},{},(err,doc)=>{
-          if(!err){
-            console.log(err);
-          }
-        })
-      }
-      arr.push(obj)
-    }
-  })
-  res.redirect('/admin/bills/electricity/processing/')
 
-    // let wb= xlsx.read(req.files.file.data);
-  // let ws = wb.Sheets[wb.SheetNames[0]];
-  // let data = xlsx.utils.sheet_to_json(ws);
-  // for(d in data){
-  //   console.log(data[d]);
-  // }
-
-})
 
 module.exports = router
 

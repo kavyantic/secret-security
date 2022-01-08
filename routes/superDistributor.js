@@ -144,7 +144,74 @@ router.get('/transactions',(req,res)=>{
     res.render('admin/transactions',{info:info})
   })
 })
-
+router.get('/members/list/',(req,res)=>{
+  User.find({username:{$in:req.user.myDistributors}}).then((result)=>{
+     info = {
+       user:req.user,
+       members:result
+     }
+    res.render('superDistributor/listMembers',{info:info})
+ })
+})
+router.post('/members/updateBalance/:user',(req,res)=>{
+ let amt = Number(req.body.amount)
+ let pos_amt = Math.abs(amt)
+ let member = req.params.user
+ if(amt>0){
+  if(req.user.myDistributors.includes(member)){
+    if(Number(req.user.balance)>=Number(amt)){
+      User.findOneAndUpdate({username:member},{"$inc":{"balance":amt}},{},(err,doc)=>{
+        if(!err){
+          if(amt>0){
+            transaction = new Transaction({
+            type:'FUNDADD',
+            department:'SELF',
+             amount:pos_amt,
+             from:{
+               id:req.user._id,
+               name:req.user.username
+              },
+             to:{
+               id:doc._id,
+               name:doc.username
+             } 
+            })
+          } else {
+            transaction = new Transaction({
+              amount:pos_amt,
+              type:'FUNDLESS',
+              department:'SELF',
+              to:{  
+                id:req.user._id,
+                name:req.user.username
+               },
+              from:{
+                id:doc._id,
+                name:doc.username
+              } 
+             })
+          }
+          User.updateOne({username:req.user.username},{"$inc":{"balance":(amt*-1)}},{},(err)=>{console.log(err,user);})
+          res.redirect('/superDistributor/members/list/')
+          transaction.save((err,doc)=>{
+            console.log(err,doc);
+          })
+         
+        }
+        else {
+          res.status(400).send(err)
+        }
+      })
+    } else {
+      res.redirect('/superDistributor/members/list')
+    }
+  }
+ } else {
+   res.redirect('/superDistributor/members/list')
+ }
+ 
+ 
+})
 
 
 // Posts //
@@ -160,7 +227,7 @@ router.post('/members/update/:type/:user',(req,res)=>{
   data.canDeductMoney = data.canDeductMoney?true:false
   User.updateOne({username:user},data,{},(err,updatedUser)=>{
         if(!err){
-          res.redirect('/admin/members/list/'+type)
+          res.redirect('/superDistributor/members/list/')
         } else {
            console.log(err);
         }

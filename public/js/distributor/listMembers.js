@@ -46,10 +46,20 @@ infoButtons.forEach((btn)=>{
 
 
 var amountInput = document.querySelector('#Amount')
+var balance  = Number(document.querySelector("#messagesDropdown > span").innerText)
 var updateAmountButton = document.querySelector('.update-balance-button')
 amountInput.addEventListener('input',(e)=>{
     console.log(e.target.value);
     value = e.target.value
+    if(Number(value)>Number(balance)){
+        if(updateAmountButton.getAttribute("disabled")!='true'){
+            updateAmountButton.innerHTML = "Exceeding"
+            updateAmountButton.setAttribute('disabled',true)
+        }
+    } else if(updateAmountButton.getAttribute("disabled")=='true'){
+        // updateAmountButton.innerHTML = "Add"
+        updateAmountButton.removeAttribute('disabled')
+    }
     if(value.startsWith('-')){
         updateAmountButton.innerHTML = "Deduct"
         updateAmountButton.classList.remove('btn-primary')

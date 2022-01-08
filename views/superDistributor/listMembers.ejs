@@ -1,184 +1,179 @@
 <%-include('partials/header',{user:info.user}) %>
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Distributors</h1>
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Distributors Info</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="dataTable"  >
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Email</th>
-                                            <th>Balance</th>
-                                            <th>Phone</th>
-                                            <th>Retailers</th>
-                                            <th>Edit</th>
+   
+<!-- <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+    <div class="toast" style="position: absolute; top: 0; right: 0;">
+      <div class="toast-header">
+        <img src="..." class="rounded mr-2" alt="...">
+        <strong class="mr-auto">Bootstrap</strong>
+        <small>11 mins ago</small>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        Hello, world! This is a toast message.
+      </div>
+    </div>
+  </div> -->
 
-                                        </tr>
-                                    </thead>
-                                    <!-- <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot> -->
-                                    <tbody>
-                                        <% info.distributors.forEach(user=>{%>
-                                            <tr>
-                                                <td><%=user.username%></td>
-                                                <td><%=user.password%></td>
-                                                <td><%=user.email%></td>
-                                                <td><%=user.balance%></td>
-                                                 <td><%=user.phone%></td>
-                                                <td><%=user.retailers%></td>
-                                                <td><a href="/admin/"><button type="button" class="btn btn-primary">Edit</button></a></td>
-                                            </tr>
-                                            <% }) %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Retailers</h1>
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Retailers Info</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Email</th>
-                                            <th>Balance</th>
-                                            <th>Phone</th>
-                                            <th>Bills</th>
-                                            <th>Sponsered</th>
-                                            <th>Edit</th>
-                                        </tr>
-                                    </thead>
-                                    <!-- <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot> -->
-                                    <tbody>
-                                        <% info.retailers.forEach(user=>{%>
-                                            <tr>
-                                                <td><%=user.username%></td>
-                                                <td><%=user.password%></td>
-                                                <td><%=user.email%></td>
-                                                <td><%=user.balance%></td>
-                                                 <td><%=user.phone%></td>
-                                                <td><%=user.retailers%></td>
-                                                <td><%=user.distributor%></td>
-                                                <td><button type="button" class="btn btn-primary">Edit</button></td>
-                                            </tr>
-                                        <% }) %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <h1 class="h3 mb-2 text-gray-800">Super  distributor</h1>
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Retailers Info</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Email</th>
-                                            <th>Balance</th>
-                                            <th>Phone</th>
-                                            <th>Bills</th>
-                                            <th>Sponsered</th>
-                                            <th>Edit</th>
-                                        </tr>
-                                    </thead>
-                                    <!-- <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot> -->
-                                    <tbody>
-                                        <% info.superDistributor.forEach(user=>{%>
-                                            <tr>
-                                                <td><%=user.username%></td>
-                                                <td><%=user.password%></td>
-                                                <td><%=user.email%></td>
-                                                <td><%=user.balance%></td>
-                                                 <td><%=user.phone%></td>
-                                                <td><%=user.retailers%></td>
-                                                <td><%=user.distributor%></td>
-                                                <td><button type="button" class="btn btn-primary">Edit</button></td>
-                                            </tr>
-                                        <% }) %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-           
-                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                    Launch demo modal
-                  </button>
-                  
-                  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          ...
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
+    <!-- Page Heading -->
+                 <h1 class="h3 mb-2 text-gray-800">Your DISTRIBUTOR</h1>
+                 <div class="card shadow mb-4">
+                     <div class="card-header py-3">
+                         <h6 class="m-0 font-weight-bold text-primary">Distributor Info</h6>
+                     </div>
+                     <div class="card-body">
+                         <div class="table-responsive">
+                             <table class="table table-bordered" id="dataTable" width="100%" height="10%"  cellspacing="0">
+                                 <thead>
+                                     <tr>
+                                      <th>Username</th>
+                                      <th>Password</th>
+                                      <th>Email</th>
+                                      <th>Balance</th>
+                                      <th>Phone</th>
+                                      <th>Info</th>
+                                 </thead>
+                                 <!-- <tfoot>
+                                     <tr>
+                                         <th>Name</th>
+                                         <th>Position</th>
+                                         <th>Office</th>
+                                         <th>Age</th>
+                                         <th>Start date</th>
+                                         <th>Salary</th>
+                                     </tr>
+                                 </tfoot> -->
+                                 <tbody >
+                                     <% info.members.forEach(user=>{%>
+                                         <tr id=<%=user.username%> >
+                                            <td class="td username"><%=user.username%></td>
+                                            <td class="td password"><%=user.password%></td>
+                                            <td class="td email"><%=user.email%></td>
+                                            <td class="td balance"><%=user.balance || "0"%> ₹</td>
+                                            <td class="td phone"><%=user.phone%></td>
+                                            <td class=" td info-button">
+                                                <button 
+                                                type="button" 
+                                                class="btn btn-primary user-info" 
+                                                data-toggle="modal" 
+                                                data-target="#infoModal" 
+                                                username=<%= user.username %> > Info
+                                             </button>
+                                            </td>
+                                         </tr>
+                                     <% }) %>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+               
+        
+               
+               <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                 <div class="modal-dialog">
+                   <div class="modal-content">
+                     <div class="modal-header">
+                       <h5 class="modal-title" id="exampleModalLabel">User info</h5>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                       </button>
+                     </div>
+                     <div class="modal-body"> 
+                       <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Distributor </h4>
+                        <table id="" width="100%">
+                            <tbody>
+                                <!-- <tr>
+                                    <td>MemberType :</td>
+                                    <td>
+                                        <label id="MemberType">Retailer</label>
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <td>Username :</td>
+                                    <td>
+                                        <label id="Username"></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Password :</td>
+                                    <td>
+                                        <label id="Password"></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Email :</td>
+                                    <td>
+                                        <label id="Email"></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mobile :</td>
+                                    <td>
+                                        <label id="Phone"></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Balance :</td>
+                                    <td>
+                                        <label id="Balance"></label>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>SponsoredBy :</td>
+                                    <td>
+                                        <label id="Sponsor"></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Update Member :</td>
+                                    <td>
+                                        <a id="Update" href="/distributor/members/update/">Update</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Balance :</td>
+                                    <td>
+                                        <a  data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                            UpdateBalance
+                                          </a>                                   
+                                     </td>
+                                </tr>
+                              
+                            </tbody>
+                        </table>
+                       
                       </div>
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                        <div class="alert alert-warning" role="alert">
+                            <h5 class="alert-heading">Balance</h5>
+                            <div class="alert alert-primary" role="alert">
+                                <span class="from">@<%= info.user.username %></span > to <span class="to" ></span>
+                                    </div>
+                               <form id="UpdateBalanceForm" action="/distributor/members/updateBalance/" method="post">
+                                <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
+                                 </div>
+                                    <input id="Amount" name="amount" class="form-control" placeholder="Amount" type="number">
+                                    <button style="margin-left: 1%;transition:0.5s;" class="btn btn-primary  update-balance-button">Add</button>
+                                </div>  
+                               </form>
+                              </div>
                     </div>
-                  </div>  -->
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>
-
-                    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-sm">
-                        <div class="modal-content">
-                        ...
-                        </div>
-                    </div>
-                    </div>
+                     </div>
+                     <div class="modal-footer">
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                       <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                     </div>
+                   </div>
+                 </div>
+               </div> 
+ 
+            
       
-<%-include('partials/footer') %>
+<%-include('partials/footer',{path:"listMembers"}) %>

@@ -20,7 +20,7 @@ const transactionSchema = new mongoose.Schema({
 
     status:{
         type:String,
-        enum:['APPROVED','PENDING','REJECTED'],
+        enum:['APPROVED','PENDING','REJECTED','PROCESSING'],
         default:'APPROVED'
     },
     customerNo:{

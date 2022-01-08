@@ -1,5 +1,4 @@
 
-
 var infoButtons = document.querySelectorAll('.info-button')
 var infoModal = document.querySelector('#infoModal')
 
@@ -10,7 +9,6 @@ var balance = document.querySelector("#Balance")
 var email = document.querySelector("#Email")
 var mobile = document.querySelector("#Phone")
 var sponseredBy = document.querySelector("#Sponsor")
-var addAccount = document.querySelector('#AddMember')
 
 var  updateBalanceForm = document.querySelector('#UpdateBalanceForm')
 var to = document.querySelector("#collapseExample > div > div > span.to")
@@ -21,21 +19,19 @@ console.log(pass,balance);
 function setModalInfo(obj){
 }
 
-
 infoButtons.forEach((btn)=>{
     btn.addEventListener('click',(e)=>{
         let url = e.target.getAttribute('info-url')
         let name = e.target.getAttribute('username')
         let td = document.querySelector(`#${name}`)
-        updateUrl.setAttribute('href',("/admin/members/update/"+url).replace(/([^:]\/)\/+/g, "$1"))
-        updateBalanceForm.setAttribute('action',("/admin/members/updateBalance/"+url).replace(/([^:]\/)\/+/g, "$1"))
-        addAccount.setAttribute('href',`/admin/${name}/addMember`)
+        updateUrl.setAttribute('href',("/superDistributor/members/update/"+name).replace(/([^:]\/)\/+/g, "$1"))
+        updateBalanceForm.setAttribute('action',("/superDistributor/members/updateBalance/"+name).replace(/([^:]\/)\/+/g, "$1"))
         username.innerHTML = name 
         pass.innerHTML = td.querySelector('.password').innerHTML
         balance.innerHTML = td.querySelector('.balance').innerHTML
         email.innerHTML = td.querySelector('.email').innerHTML
         mobile.innerHTML = td.querySelector('.phone').innerHTML
-        to.innerHTML = name+"@"
+        to.innerHTML = "@"+name
         // sponseredBy.innerHTML = td.querySelector('.balance').innerHTML
 
 
@@ -50,10 +46,20 @@ infoButtons.forEach((btn)=>{
 
 
 var amountInput = document.querySelector('#Amount')
+var balance  = Number(document.querySelector("#messagesDropdown > span").innerText)
 var updateAmountButton = document.querySelector('.update-balance-button')
 amountInput.addEventListener('input',(e)=>{
     console.log(e.target.value);
     value = e.target.value
+    if(Number(value)>Number(balance)){
+        if(updateAmountButton.getAttribute("disabled")!='true'){
+            updateAmountButton.innerHTML = "Exceeding"
+            updateAmountButton.setAttribute('disabled',true)
+        }
+    } else if(updateAmountButton.getAttribute("disabled")=='true'){
+        // updateAmountButton.innerHTML = "Add"
+        updateAmountButton.removeAttribute('disabled')
+    }
     if(value.startsWith('-')){
         updateAmountButton.innerHTML = "Deduct"
         updateAmountButton.classList.remove('btn-primary')

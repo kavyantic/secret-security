@@ -27,14 +27,14 @@ const status = document.querySelector("#status")
 const receipt= document.querySelector("#receipt")
 const id  = document.querySelector("#receiptId")
 
-const statusUpdate = document.querySelectorAll('.status-update.SUCCESSFUL')
+const statusUpdate = document.querySelectorAll('.status-update')
 statusUpdate.forEach(ele=>{
     ele.addEventListener('click',(e)=>{
-            console.log(e.target.classList);
-            tRow = e.target.closest('tr')
-            id.value = tRow.querySelector('.id').innerHTML
-            let currentStatus  = tRow.querySelector('.status').innerHTML.toLowerCase()
-            // status.querySelector(`.${currentStatus}`).setAttribute('selected')
-            $('#updateModal').modal('show')
+        tRow = e.target.closest('tr')
+        console.log(tRow);
+        id.value = tRow.querySelector('.id').innerHTML
+        let currentStatus  = tRow.querySelector('.status').innerHTML.toLowerCase()
+        // status.querySelector(`.${currentStatus}`).setAttribute('selected')
+        $('#updateModal').modal('show')
     })
 })
