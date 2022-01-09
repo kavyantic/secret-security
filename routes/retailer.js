@@ -290,10 +290,11 @@ router.post('/bills/electricity/fetch',(req,res)=>{
           dueDate:billInfo.BILLDUEDATE,
           billNo:billInfo.BILLNO,
         }
-        if(Number(billInfo.BILLAMT)<=Number(req.user.balance)){
+        if(Number(billInfo.BILLAMT)<=(Number(req.user.balance)+Number(req.user.creditLimit))){
           info.status="success"
           res.render('retailer/submitBill',{info:info})
         } else {
+          
           info.status="danger"
           info.msg = "You dont have enough balance"
           res.render('retailer/submitBill',{info:info})

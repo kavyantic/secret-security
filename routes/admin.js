@@ -267,7 +267,6 @@ router.get('/ledger',(req,res)=>{
   }
       res.render('admin/ledger',{info:info})
 })
-
 router.post('/ledger/',(req,res)=>{
   member = req.body.member
   query = {$or:[
@@ -476,6 +475,22 @@ router.post('/members/updateBalance/:type/:user',(req,res)=>{
     }
   })
 })
+router.post('/members/creditBalance/:type/:user',(req,res)=>{
+  let amt = req.body.amount
+  let type = req.params.type
+  let pos_amt = Math.abs(amt)
+  User.findOneAndUpdate({username:req.params.user},{"$inc":{"creditLimit":amt}},{},(err,doc)=>{
+    if(!err){
+      console.log(err,doc);
+      res.redirect('/admin/members/list/'+type)
+
+    }
+    else {
+      res.status(400).send(err)
+    }
+  })
+})
+
 router.get('/createBatch/electricity',(req,res)=>{
   var name = req.body.name
   var batch = []
@@ -613,12 +628,3 @@ router.post('/bills/electricity/updateOne',(req,res)=>{
   })
 })
 module.exports = router
-
-
-
-
-
-
-
-
-

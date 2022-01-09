@@ -128,11 +128,12 @@
                                 <tr>
                                     <td>Balance :</td>
                                     <td>
-                                        <a  data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        <a  data-toggle="collapse" id='balance' href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                                             UpdateBalance
                                           </a>                                   
                                      </td>
                                 </tr>
+                               
                                 <!-- <tr>
                                     <td>DOB :</td>
                                     <td>
@@ -166,17 +167,30 @@
                         <div class="alert alert-warning" role="alert">
                             <h5 class="alert-heading">Balance</h5>
                             <div class="alert alert-primary" role="alert">
-                                <span class="from">@<%= info.user.username %></span > to <span class="to" >@Hell</span>
+                                Add balance <span class="from">@<%= info.user.username %></span > to <span class="to" ></span>
+                                <form id="UpdateBalanceForm" action="/admin/members/updateBalance/" method="post">
+                                    <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
+                                     </div>
+                                        <input id="Amount" name="amount" class="form-control" placeholder="Amount" type="number">
+                                        <button style="margin-left: 1%;transition:0.5s;" class="btn btn-primary  update-balance-button">Add</button>
+                                    </div>  
+                                   </form>
                                     </div>
-                               <form id="UpdateBalanceForm" action="/admin/members/updateBalance/" method="post">
+                         <div class="alert alert-success" role="alert">
+                                 Add credit limit <span class="from">@<%= info.user.username %></span > to <span class="to" ></span>
+                            <form id="CreditBalanceForm" action="/admin/members/creditBalance/" method="post">
                                 <div class="form-group input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
-                                 </div>
-                                    <input id="Amount" name="amount" class="form-control" placeholder="Amount" type="number">
+                                    </div>
+                                    <input id="Amount" value="0" name="amount" class="form-control" placeholder="Amount" type="number">
                                     <button style="margin-left: 1%;transition:0.5s;" class="btn btn-primary  update-balance-button">Add</button>
                                 </div>  
-                               </form>
+                                </form>
+                                </div>
+                              
                               </div>
                     </div>
                      </div>

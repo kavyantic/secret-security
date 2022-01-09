@@ -50,12 +50,19 @@ userSchema = new mongoose.Schema({
       type:String,
       unique:true,
       // $regex: '^[6-9]\d{9}$' 
-  
+    
+    },
+    creditLimit:{
+      type:Number,
+      default:0
     },
     mySponser:{
       type:String
     },
-    balance:Number,
+    balance:{
+      type:Number,
+      default:0
+    },
     myRetailers:[
       // {type:mongoose.Schema.Types.ObjectId,ref:"Retailers"}
       {type:String}

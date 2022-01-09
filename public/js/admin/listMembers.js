@@ -13,7 +13,9 @@ var sponseredBy = document.querySelector("#Sponsor")
 var addAccount = document.querySelector('#AddMember')
 
 var  updateBalanceForm = document.querySelector('#UpdateBalanceForm')
-var to = document.querySelector("#collapseExample > div > div > span.to")
+var  creditBalanceForm = document.querySelector('#CreditBalanceForm')
+
+var to = document.querySelectorAll("span.to")
 
 
 console.log(pass,balance);
@@ -29,13 +31,18 @@ infoButtons.forEach((btn)=>{
         let td = document.querySelector(`#${name}`)
         updateUrl.setAttribute('href',("/admin/members/update/"+url).replace(/([^:]\/)\/+/g, "$1"))
         updateBalanceForm.setAttribute('action',("/admin/members/updateBalance/"+url).replace(/([^:]\/)\/+/g, "$1"))
+        creditBalanceForm.setAttribute('action',("/admin/members/creditBalance/"+url).replace(/([^:]\/)\/+/g, "$1"))
+
+
         addAccount.setAttribute('href',`/admin/${name}/addMember`)
         username.innerHTML = name 
         pass.innerHTML = td.querySelector('.password').innerHTML
         balance.innerHTML = td.querySelector('.balance').innerHTML
         email.innerHTML = td.querySelector('.email').innerHTML
         mobile.innerHTML = td.querySelector('.phone').innerHTML
-        to.innerHTML = name+"@"
+        to.forEach(t=>{
+            t.innerHTML = "@"+name
+        })
         // sponseredBy.innerHTML = td.querySelector('.balance').innerHTML
 
 
