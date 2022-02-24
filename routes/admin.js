@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { query } = require('express');
 const mongoose = require('mongoose');
 
 const User = mongoose.model('User')
@@ -13,6 +14,7 @@ const ProWaterBill = mongoose.model('ProcessingWaterBill')
 const Transaction = mongoose.model('Transaction')
 const BatchElectricity =   mongoose.model('BatchElectricity')
 const xlsx = require('node-xlsx')
+
 // const xlsx = require('xlsx')
 
 
@@ -44,21 +46,82 @@ router.use((req,res,next)=>{
   }
 })
 router.get('/dashboard',(req,res)=>{ 
-  console.log(process.env.serviceTime);
-    var future = new Date(); 
-    prevMonth = future.setDate(future.getDate() - 30);
-    prevDate = future.setDate(future.getDate() - 1);
-    ProElecBill.f
-    Transaction.find({status:"PENDING"},(err,transactions)=>{
-      info = { 
-        serviceTime : process.env.serviceTime,
-        user:req.user,
-        transactions:transactions 
-      }
-      
-     res.render('admin/dashboard',{info:info})
-    }) 
- })
+  var a = new Date(); 
+  infoToDate = a.toDateString() 
+  let [yy,mm,dd] = [a.getFullYear(),a.getMonth(),a.getDate()]
+  let prevMonth = new Date(yy,mm-1,dd)
+  let infoFromDate = prevMonth.toDateString()
+  let today = new Date(yy,mm,dd-1)
+  Promise.all([
+    Transaction.aggregate().facet({
+     "totalAmountMonth":[ { $match:{date: {$gte:prevMonth}}} ,
+      { $group: { _id: null,
+         amount: { $sum: "$amount" } ,
+         count:{$sum:1}} ,
+
+        }],
+      "totalAmountToday":[
+        { $match:{date: {$gte:today}}} ,
+        { $group: { _id: null, amount: { $sum: "$amount" } ,count:{$sum:1}} }
+       ]
+    }),
+     Transaction.find({type:"FUNDREQUEST"}) 
+     
+  ]).then(result=>{
+    let transAggr = result[0][0]
+    console.log(transAggr);
+    let info = { 
+      toDate:infoToDate,
+      fromDate:infoFromDate,
+      serviceTime : process.env.serviceTime,
+      user:req.user,
+      transactions:result[1],  
+      transactionToday:transAggr.totalAmountToday[0] || {amount:0},
+      transactionMonthly:transAggr.totalAmountMonth[0] || {amount:0}
+    }
+    res.render('admin/dashboard',{info:info})
+
+  }) 
+})
+router.post('/dashboard',(req,res)=>{ 
+  var a = new Date(); 
+  infoToDate = a.toDateString()
+  let [yy,mm,dd] = [a.getFullYear(),a.getMonth(),a.getDate()]
+  let prevMonth = new Date(yy,mm-1,dd)
+  let infoFromDate = prevMonth.toDateString()
+  let today = new Date(yy,mm,dd-1)
+  Promise.all([
+    Transaction.aggregate().facet({
+     "totalAmountMonth":[ { $match:{date: {$gte:prevMonth}}} ,
+      { $group: { _id: null,
+         amount: { $sum: "$amount" } ,
+         count:{$sum:1}} ,
+
+        }],
+      "totalAmountToday":[
+        { $match:{date: {$gte:today}}} ,
+        { $group: { _id: null, amount: { $sum: "$amount" } ,count:{$sum:1}} }
+       ]
+    }),
+     Transaction.find({type:"FUNDREQUEST"}) 
+     
+  ]).then(result=>{
+    let transAggr = result[0][0]
+    console.log(transAggr);
+    let info = { 
+      custom:true,
+      toDate:infoToDate,
+      fromDate:infoFromDate,
+      serviceTime : process.env.serviceTime,
+      user:req.user,
+      transactions:result[1],  
+      transactionToday:transAggr.totalAmountToday[0],
+      transactionMonthly:transAggr.totalAmountMonth[0] || {amount:0}
+    }
+    res.render('admin/dashboard',{info:info})
+
+  }) 
+})
 router.get('/:accountName/addMember',(req,res)=>{
   let name = req.params.accountName
   User.findOne({'username':name},(err,foundUser)=>{
@@ -380,7 +443,7 @@ router.post('/members/update/:type/:user',(req,res)=>{
 })
 router.post('/transactions',(req,res)=>{
   const {toDate,fromDate,toName,fromName,type,department,status} = req.body
-  query = {}
+  let query = {}
   if(toDate || fromDate){
     query.date= {}
     toDate?query.date["$lte"] = new Date(req.body.toDate.split("-")).setHours(24):""

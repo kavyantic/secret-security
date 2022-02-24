@@ -16,8 +16,7 @@ process.env.serviceTime = "23:59"
 
 var isProduction = process.env.NODE_ENV === 'production';
 
-dbUrl = isProduction?process.env.DB_URL:process.env.LOCAL_DB_URL
-
+process.env.LOCAL_DB_URL = "mongodb://localhost:27017/rechargePortal"
 mongoose.connect(process.env.LOCAL_DB_URL || "mongodb+srv://rahulkavya9610:painter05@cluster0.afuye.mongodb.net/rechargePortal?retryWrites=true&w=majority",{useNewUrlParser:true,useUnifiedTopology:true})
 mongoose.set('useCreateIndex',true)
 autoIncrement.initialize(mongoose);
